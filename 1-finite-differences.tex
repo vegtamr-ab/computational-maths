@@ -57,4 +57,30 @@
     \item \(\Delta \cos{k} = \cos{(k+1)} - \cos{k} = -2\sin{\frac{1}{2}}\sin{(k+\frac{1}{2})} \)
   \end{enumerate}
 
+\section{Разделённые разности}
+\(f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k}\) \\
+\vspace{5mm}
+Аналогично производным высших порядков вводятся разделённые разности: \\
+\(f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k}\) \\
+\dots \\
+\(f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{f(x_{k+1}; x_{k+2}; \dots; x_{k+s})
+    - f(x_k; x_{k+1}; \dots; x_{k+s-1})}{x_{k+s} - x_k}\) \\
+\vspace{5mm}
+Аналогично вводятся конечные разности высших порядков: \\
+\vspace{5mm}
+\(\Delta f_k = f_{k+1} - f_k\) \\
+\(\Delta^2 f_k = \Delta f_{k+1} - \Delta f_k = f_{k+2} - f_{k+1} - f_{k+1} + f_k = f_{k+2} - 2f_{k+1} + f_k\) \\
+\(\Delta^3 f_k = \Delta^2 f_{k+1} - \Delta^2 f_k = f_{k+3} - 3f_{k+2} + 3f_{k+1} - f_k\) \\
+\dots \\
+\vspace{5mm}
+Если узлы таблицы равноотстоящие, то можно использовать и конечные, и разделённые разности.
+Установим связь между ними для равноотстоящих узлов: \\
+\vspace{5mm}
+\(f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k} = \frac{\Delta f_k}{h}\) \\
+\(f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k}
+    = \frac{\frac{\Delta f_{k+1}}{h} - \frac{\Delta f_k}{h}}{2h} = \frac{\Delta^2 f_k}{2h^2}\) \\
+\vspace{5mm}
+По индукции легко показать, что: \\
+\(f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{\Delta^s f_k}{s! \times h^s}\)
+
 \end{document}
