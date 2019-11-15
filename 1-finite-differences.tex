@@ -96,7 +96,40 @@
   \Delta F(k) = \phi(k)
 \end{equation}
 
+\begin{equation}
+  \begin{cases}
+    F_1 - F_0 = \phi_0 \\
+    F_2 - F_1 = \phi_1 \\
+    \cdots \\
+    F_{n+1} - F_n = \phi_n
+  \end{cases} \Leftrightarrow F_{n+1} - F_0 = \sum_{k=0}^{n} \phi_k
+  \label{eq:NtLbFormula}
+\end{equation}
 
+Уравнение \ref{eq:NtLbFormula} является дискретным аналогом формулы Ньютона-Лейбница.
+
+  \subsection{Примеры}
+  %TODO: Дополнить.
+
+  \subsection{Формула Абеля суммирования по частям}
+  \[\int_{a}^{b} u\,dv = uv \bigg|_{a}^{b} - \int_{a}^{b} v\,du\]
+  \begin{equation}
+    \begin{split}
+      \int_{a}^{b} \bigg| \frac{d}{dx}(U(x)v(x)) = u(x)v(x) + U(x)\frac{dv(x)}{dx} \\
+      \int_{a}^{b} u(x)v(x)\,dx = U(x)v(x) \bigg|_{a}^{b} - \int_{a}^{b} U(x)\frac{dv}{dx} \,dx
+    \end{split}
+  \end{equation}
+  \hrule
+  \begin{equation}
+    \begin{split}
+      \sum_{k=m}^{n} \bigg| \Delta(U_k v_k) = u_{k+1} v_{k+1} + U_k \Delta v_k \\
+      \sum_{k=m}^{n} u_{k+1} v_{k+1} = U_k v_k \bigg|_{m}^{n+1} - \sum_{k=m}^{n} U_k \Delta v_k
+    \end{split}
+    \label{eq:SumByParts}
+  \end{equation}
+
+  Формула \ref{eq:SumByParts} - формула Абеля суммирования по частям.
+  %TODO: add more info.
 
 \newpage
 
