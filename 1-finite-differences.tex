@@ -27,18 +27,17 @@
     $x_m$ & $f(x_m)$
   \end{tabular}
   \vspace{3mm}
-  \(x_k = x_0 + k \times h\)
+  \[x_k = x_0 + k \times h\]
 \end{wraptable}
 
-\(\Delta_h f(x_k) = f(x_{k+1} - f(x_k)) = f(x_0 + (k+1)h) - f(x_0 + kh)\)
+\[\Delta_h f(x_k) = f(x_{k+1} - f(x_k)) = f(x_0 + (k+1)h) - f(x_0 + kh)\]
 
 \begin{center}
-  \(f_k \stackrel{\mathrm{def}}{=} f(k)\)
+  \[f_k \stackrel{\mathrm{def}}{=} f(k)\]
 \end{center}
 
-\(\Delta f(k) = f(k+1) - f(k) = f_{k+1} - f_k\)
+\[\Delta f(k) = f(k+1) - f(k) = f_{k+1} - f_k\]
 
-\vspace{1.2cm}
   \subsection{Свойства конечных разностей}
   \begin{enumerate}
     \item \(\Delta \alpha = \alpha - \alpha = 0\)
@@ -56,31 +55,36 @@
     \item \(\Delta \sin{k} = \sin{(k+1)} - \sin{k} = 2\sin{\frac{1}{2}}\cos{(k+\frac{1}{2})} \)
     \item \(\Delta \cos{k} = \cos{(k+1)} - \cos{k} = -2\sin{\frac{1}{2}}\sin{(k+\frac{1}{2})} \)
   \end{enumerate}
+\newpage
 
 \section{Разделённые разности}
-\(f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k}\) \\
-\vspace{5mm}
+\[f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k}\] \\
 Аналогично производным высших порядков вводятся разделённые разности: \\
-\(f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k}\) \\
-\dots \\
-\(f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{f(x_{k+1}; x_{k+2}; \dots; x_{k+s})
-    - f(x_k; x_{k+1}; \dots; x_{k+s-1})}{x_{k+s} - x_k}\) \\
-\vspace{5mm}
+\[f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k}\] \\
+\[\dots\] \\
+\[f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{f(x_{k+1}; x_{k+2}; \dots; x_{k+s})
+    - f(x_k; x_{k+1}; \dots; x_{k+s-1})}{x_{k+s} - x_k}\] \\
 Аналогично вводятся конечные разности высших порядков: \\
-\vspace{5mm}
-\(\Delta f_k = f_{k+1} - f_k\) \\
-\(\Delta^2 f_k = \Delta f_{k+1} - \Delta f_k = f_{k+2} - f_{k+1} - f_{k+1} + f_k = f_{k+2} - 2f_{k+1} + f_k\) \\
-\(\Delta^3 f_k = \Delta^2 f_{k+1} - \Delta^2 f_k = f_{k+3} - 3f_{k+2} + 3f_{k+1} - f_k\) \\
-\dots \\
-\vspace{5mm}
+\[\Delta f_k = f_{k+1} - f_k\] \\
+\[\Delta^2 f_k = \Delta f_{k+1} - \Delta f_k = f_{k+2} - f_{k+1} - f_{k+1} + f_k = f_{k+2} - 2f_{k+1} + f_k\] \\
+\[\Delta^3 f_k = \Delta^2 f_{k+1} - \Delta^2 f_k = f_{k+3} - 3f_{k+2} + 3f_{k+1} - f_k\] \\
+\[\dots\] \\
 Если узлы таблицы равноотстоящие, то можно использовать и конечные, и разделённые разности.
 Установим связь между ними для равноотстоящих узлов: \\
-\vspace{5mm}
-\(f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k} = \frac{\Delta f_k}{h}\) \\
-\(f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k}
-    = \frac{\frac{\Delta f_{k+1}}{h} - \frac{\Delta f_k}{h}}{2h} = \frac{\Delta^2 f_k}{2h^2}\) \\
-\vspace{5mm}
+\[f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k} = \frac{\Delta f_k}{h}\] \\
+\[f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k}
+    = \frac{\frac{\Delta f_{k+1}}{h} - \frac{\Delta f_k}{h}}{2h} = \frac{\Delta^2 f_k}{2h^2}\] \\
 По индукции легко показать, что: \\
-\(f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{\Delta^s f_k}{s! \times h^s}\)
+\[f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{\Delta^s f_k}{s! \times h^s}\]
+\newpage
+
+\section{Суммирование функций}
+\begin{equation}
+  \Delta F(k) = \phi(k)
+\end{equation}
+
+
+
+\newpage
 
 \end{document}
