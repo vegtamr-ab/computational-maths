@@ -1,6 +1,7 @@
 \documentclass[a4paper,11pt]{article}
 
 \usepackage{wrapfig}
+\usepackage{amsmath}
 %Russian-specific packages
 %--------------------------------------
 \usepackage[T2A]{fontenc}
@@ -17,26 +18,28 @@
 \newpage
 
 \section{Конечные разности}
-\begin{wraptable}{l}{2.5cm}
-  \begin{tabular}{ c|c }
-    $x$ & $f(x)$ \\
-    \hline
-    $x_0$ & $f(x_0)$ \\
-    $x_1$ & $f(x_1)$ \\
-    $\cdots$ & $\cdots$ \\
-    $x_m$ & $f(x_m)$
-  \end{tabular}
-  \vspace{3mm}
-  \[x_k = x_0 + k \times h\]
-\end{wraptable}
+\begin{minipage}{1\linewidth}
+  \begin{wraptable}{l}{2.5cm}
+    \begin{tabular}{ c|c }
+      $x$ & $f(x)$ \\
+      \hline
+      $x_0$ & $f(x_0)$ \\
+      $x_1$ & $f(x_1)$ \\
+      $\cdots$ & $\cdots$ \\
+      $x_m$ & $f(x_m)$
+    \end{tabular}
+    \vspace{1mm}
+    \[x_k = x_0 + k \times h\]
+  \end{wraptable}
 
-\[\Delta_h f(x_k) = f(x_{k+1} - f(x_k)) = f(x_0 + (k+1)h) - f(x_0 + kh)\]
+  \begin{gather*}
+    \Delta_h f(x_k) = f(x_{k+1} - f(x_k)) = f(x_0 + (k+1)h) - f(x_0 + kh) \\
+    f_k \stackrel{\mathrm{def}}{=} f(k) \\
+    \Delta f(k) = f(k+1) - f(k) = f_{k+1} - f_k
+  \end{gather*}
+\end{minipage}
 
-\begin{center}
-  \[f_k \stackrel{\mathrm{def}}{=} f(k)\]
-\end{center}
-
-\[\Delta f(k) = f(k+1) - f(k) = f_{k+1} - f_k\]
+\vspace{1.15cm}
 
   \subsection{Свойства конечных разностей}
   \begin{enumerate}
@@ -58,17 +61,27 @@
 \newpage
 
 \section{Разделённые разности}
+
 \[f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k}\] \\
-Аналогично производным высших порядков вводятся разделённые разности: \\
-\[f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k}\] \\
-\[\dots\] \\
-\[f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{f(x_{k+1}; x_{k+2}; \dots; x_{k+s})
-    - f(x_k; x_{k+1}; \dots; x_{k+s-1})}{x_{k+s} - x_k}\] \\
-Аналогично вводятся конечные разности высших порядков: \\
-\[\Delta f_k = f_{k+1} - f_k\] \\
-\[\Delta^2 f_k = \Delta f_{k+1} - \Delta f_k = f_{k+2} - f_{k+1} - f_{k+1} + f_k = f_{k+2} - 2f_{k+1} + f_k\] \\
-\[\Delta^3 f_k = \Delta^2 f_{k+1} - \Delta^2 f_k = f_{k+3} - 3f_{k+2} + 3f_{k+1} - f_k\] \\
-\[\dots\] \\
+
+Аналогично производным высших порядков вводятся разделённые разности:
+
+\begin{gather*}
+  f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k} \\
+  \dots \\
+  f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{f(x_{k+1}; x_{k+2}; \dots; x_{k+s})
+      - f(x_k; x_{k+1}; \dots; x_{k+s-1})}{x_{k+s} - x_k}
+\end{gather*}
+
+Аналогично вводятся конечные разности высших порядков:
+
+\begin{gather*}
+  \Delta f_k = f_{k+1} - f_k \\
+  \Delta^2 f_k = \Delta f_{k+1} - \Delta f_k = f_{k+2} - f_{k+1} - f_{k+1} + f_k = f_{k+2} - 2f_{k+1} + f_k \\
+  \Delta^3 f_k = \Delta^2 f_{k+1} - \Delta^2 f_k = f_{k+3} - 3f_{k+2} + 3f_{k+1} - f_k \\
+  \dots
+\end{gather*}
+
 Если узлы таблицы равноотстоящие, то можно использовать и конечные, и разделённые разности.
 Установим связь между ними для равноотстоящих узлов: \\
 \[f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k} = \frac{\Delta f_k}{h}\] \\
