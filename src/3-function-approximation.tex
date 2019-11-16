@@ -1,0 +1,137 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\title{03. Введение в аппроксимацию функций. Основы интерполирования.}
+\author{Андрей Бареков \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Введение в аппроксимацию}
+Исходная функция чаще всего записывается в следующем виде:
+\begin{enumerate}
+  \item Аналитически
+  \item Графически
+  \item Таблично
+  \item Алгоритмически
+\end{enumerate}
+Аппроксимирующая функция должна быть достаточно простой с точки зрения решаемой задачи. \\
+Для сравнения различных аппроксимирующих функций вводится критерий близости: \\
+Пусть $f(x)$ - исходная функция, $g(x)$ - её аппроксимация.
+\begin{enumerate}
+  \item \(\delta = \max_{x \in [a,b]} |f(x) - g(x)| \to \min\) - минимаксный критерий.
+  \item \(\rho^2 = \int_{a}^{b} (f(x) - g(x))^2 \to \min\) - среднеквадратичный критерий. \\
+        Если функция задана таблично, то есть дискретный аналог среднеквадратичного критерия: \\
+        \(\rho^2 = \sum_{k=1}^{n} (f(x_k) - g(x_k))^2 \to \min\)
+\end{enumerate}
+
+  \subsection{Сравнение критериев}
+  \begin{minipage}{1\linewidth}
+    \begin{wrapfigure}{l}{8cm}
+    \begin{tikzpicture}
+      \begin{axis} [
+        xlabel = {}, ylabel = {},
+        xmin = 0, ymin = 0,
+        xtick = {}, ytick = {},
+        no markers
+      ]
+        \addplot+[smooth] [
+        color = green,
+        thick,
+        domain = 0:7,
+        samples = 300
+      ] coordinates { (0,2)(1,2.9)(1.5,3.1)(2,3)(3,2.6)(4,2.6)(5,3.1)(6,4) };
+        \addlegendentry{$f(x)$}
+
+        \addplot+[smooth] [
+        color = blue,
+        ultra thin,
+        domain = 0:7,
+        samples = 300
+      ] coordinates { (0,2)(0.5,2.5)(1,2.9)(1.25,4)(1.5,6)(1.75,4)(2,3)(2.5,2.8)(3,2.6)(4,2.6)(5,3.1)(6,4) };
+        \addlegendentry{$g_1(x)$}
+
+        \addplot+[smooth] [
+        color = red,
+        ultra thin,
+        domain = 0:7,
+        samples = 300
+      ] coordinates { (0,1.6)(1,2.5)(1.5,2.7)(2,2.6)(3,2.2)(4,2.2)(5,2.7)(6,3.6) };
+        \addlegendentry{$g_2(x)$}
+
+      \end{axis}
+    \end{tikzpicture}
+    \end{wrapfigure}
+    Функция $g_1(x)$ лучше аппроксимирует по критерию 2, а $g_2(x)$ - по критерию 1. \\
+    На практике лучше та аппроксимация, которая нужна для конкретной задачи.
+  \end{minipage}
+\newpage
+
+\section{Основы интерполирования функций}
+\begin{minipage}{1\linewidth}
+  \begin{equation}
+    Q_m(x) = \sum_{k=0}^{m} a_k \phi_k(x)
+    \label{eq:GenPol}
+  \end{equation}
+  \begin{wraptable}{l}{2.5cm}
+    \begin{tabular}{ c|c }
+      $x$ & $f(x)$ \\
+      \hline
+      $x_0$ & $f(x_0)$ \\
+      $x_1$ & $f(x_1)$ \\
+      $\cdots$ & $\cdots$ \\
+      $x_m$ & $f(x_m)$
+    \end{tabular}
+  \end{wraptable}
+
+  Аппроксимирующая функция \ref{eq:GenPol} - обобщённый многочлен. \\
+  Потребуем, чтобы во всех узлах таблицы аппроксимирующая и исходная функции совпадали.
+  \begin{equation}
+    Q_m(x_i) = f(x_i), \, i = 0, 1, \dots, m
+    \label{eq:PolSys}
+  \end{equation}
+  Если эти условия выполняются, то $Q_m(x)$ - интерполяционный полином.  
+\vspace{2mm}
+\end{minipage}
+\newline
+Система \ref{eq:PolSys} - это линейная система из $m+1$ уравнения относительно $m+1$ неизвестных $a_k$. Если определитель этой системы не равен $0$, то задача имеет единственное решение. \\
+Самая популярная интерполяция - интерполяция полиномом - \(\phi_k(x) = x^k\).
+При такой интерполяции определитель системы \ref{eq:PolSys} приобретает следующий вид:
+\begin{equation}
+  \begin{vmatrix}
+    1 & x_0 & x_0^2 & \cdots & x_0^m \\
+    1 & x_1 & x_1^2 & \cdots & x_1^m \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    1 & x_m & x_m^2 & \cdots & x_m^m
+  \end{vmatrix}
+  \label{eq:VandDet}
+\end{equation}
+Определитель \ref{eq:VandDet} - определитель Вандермонда, не равный $0$. \\
+По $n$ точкам однозначно строится интерполяционный полином $n-1$й степени. \\
+Построить интерполяционный полином можно и в явном виде, не решая систему \ref{eq:PolSys}.
+\begin{gather*}
+  \omega(x) = (x - x_0)(x - x_1)\dots(x - x_m) \\
+  \omega_k(x) = \frac{\omega(x)}{x - x_k} = (x - x_0)\dots(x - x_{k-1})(x - x_{k+1})\dots(x - x_m)
+\end{gather*}
+
+\begin{equation}
+  Q_m(x) = \sum_{k=0}{m} \frac{\omega_k(x)}{\omega_k(x_k)} f(x_k)
+  \label{eq:LgPol}
+\end{equation}
+Уравнение \ref{eq:LgPol} - интерполяционный полином (в форме) Лагранжа. \\
+По построению очевидно, что $Q_m(x)$ - полином степени $m$.
+\[Q_m(x_i) = \frac{\omega_i(x_i)}{\omega_i(x_i)} f(x_i) = f(x_i), \, i=0,1,\dots,m\]
+\(\omega_k(x_i) = 0\), если \(k \ne i\)
+
+\end{document}
