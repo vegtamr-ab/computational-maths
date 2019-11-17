@@ -10,7 +10,7 @@
 %--------------------------------------
 
 \title{01. Конечные разности и их свойства.}
-\author{Андрей Бареков \and По лекциям Устинова С.М.}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
 \date{\today}
 
 \begin{document}
@@ -46,7 +46,7 @@
     \item \(\Delta \alpha = \alpha - \alpha = 0\)
     \item \(\Delta (\alpha \times f_k) = \alpha \Delta f_k\)
     \item \(\Delta (f_k + g_k) = \Delta f_k + \Delta g_k\)
-    \item \(\Delta (f_k g_k) = f_{k+1} g_{k+1} - f_k g_k \pm f_{k+1} g_k
+    \item \(\Delta (f_k g_k) = f_{k+1} g_{k+1} - f_k g_k \pm f_{k+1} g_k = \\
         = f_{k+1} \Delta g_k + g_k \Delta f_k = f_k \Delta g_k + g_{k+1} \Delta f_k\)
     \item \(\Delta k^S = (k+1)^S - k^S = k^S + Sk^{S-1} + \frac{S(S-1)}{2!}k^{S-2} + \cdots - k^S\) \\
         Конечная разность от полинома степени $S$ это полином степени $S-1$.
@@ -64,7 +64,7 @@
 
 \[f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k}\] \\
 
-Аналогично производным высших порядков вводятся разделённые разности:
+\textbf{Аналогично производным высших порядков вводятся разделённые разности:}
 
 \begin{gather*}
   f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k} \\
@@ -73,7 +73,7 @@
       - f(x_k; x_{k+1}; \dots; x_{k+s-1})}{x_{k+s} - x_k}
 \end{gather*}
 
-Аналогично вводятся конечные разности высших порядков:
+\textbf{Аналогично вводятся конечные разности высших порядков:}
 
 \begin{gather*}
   \Delta f_k = f_{k+1} - f_k \\
@@ -83,12 +83,16 @@
 \end{gather*}
 
 Если узлы таблицы равноотстоящие, то можно использовать и конечные, и разделённые разности.
-Установим связь между ними для равноотстоящих узлов: \\
-\[f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k} = \frac{\Delta f_k}{h}\] \\
-\[f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k}
-    = \frac{\frac{\Delta f_{k+1}}{h} - \frac{\Delta f_k}{h}}{2h} = \frac{\Delta^2 f_k}{2h^2}\] \\
-По индукции легко показать, что: \\
-\[f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{\Delta^s f_k}{s! \times h^s}\]
+
+  \subsection{Связь между конечными и разделенными разностями для равноотстоящих узлов}
+
+  \begin{gather*}
+    f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k} = \frac{\Delta f_k}{h} \\
+    f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k}
+        = \frac{\frac{\Delta f_{k+1}}{h} - \frac{\Delta f_k}{h}}{2h} = \frac{\Delta^2 f_k}{2h^2}
+  \end{gather*}
+  По индукции легко показать, что: \\
+  \[f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{\Delta^s f_k}{s! \times h^s}\]
 \newpage
 
 \section{Суммирование функций}
