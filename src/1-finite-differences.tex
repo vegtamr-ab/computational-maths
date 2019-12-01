@@ -124,9 +124,21 @@
     \end{split}
   \end{equation}
   \hrule
+  \marginpar
+  {
+    \begin{gather*}
+      \begin{subarray}{1}
+        (*) \\
+        \Delta (f_k g_k) = f_k \Delta g_k + g_{k+1} \Delta f_k \\
+        \Delta (f_k) = f_{k+1} - f_k \\
+        \Delta U(k) = \sum_{i=0}^{k+1} u(i) - \\
+        - \sum_{i=0}^{k} u(i) = u(k+1)
+      \end{subarray}
+    \end{gather*}
+  }
   \begin{equation}
     \begin{split}
-      \sum_{k=m}^{n} \bigg| \Delta(U_k v_k) = u_{k+1} v_{k+1} + U_k \Delta v_k \\
+      \sum_{k=m}^{n} \bigg| \Delta(U_k v_k) = [ u_{k+1} v_{k+1} ]^{(*)} + U_k \Delta v_k \\
       \sum_{k=m}^{n} u_{k+1} v_{k+1} = U_k v_k \bigg|_{m}^{n+1} - \sum_{k=m}^{n} U_k \Delta v_k
     \end{split}
     \label{eq:SumByParts}
