@@ -48,7 +48,12 @@
     \item \(\Delta (f_k + g_k) = \Delta f_k + \Delta g_k\)
     \item \(\Delta (f_k g_k) = f_{k+1} g_{k+1} - f_k g_k \pm f_{k+1} g_k = \\
         = f_{k+1} \Delta g_k + g_k \Delta f_k = f_k \Delta g_k + g_{k+1} \Delta f_k\)
-    \item \(\Delta k^S = (k+1)^S - k^S = k^S + Sk^{S-1} + \frac{S(S-1)}{2!}k^{S-2} + \cdots - k^S\) \\
+    \item \(\Delta k^S = (k+1)^S - k^S = k^S + Sk^{S-1} + \frac{S(S-1)}{2!}k^{S-2} + \cdots - k^S =\)
+
+        \vspace*{0.5mm}
+        \(= \frac{S!}{1!(S-1)!}k^{S-1} + \frac{S!}{2!(S-2)!}k^{S-2} + \cdots + \frac{S!}{(S-1)!1!}k + 1\)
+
+        \vspace*{1mm}
         Конечная разность от полинома степени $S$ это полином степени $S-1$.
   \end{enumerate}
 
@@ -110,7 +115,7 @@
   \label{eq:NtLbFormula}
 \end{equation}
 
-Уравнение \ref{eq:NtLbFormula} является дискретным аналогом формулы Ньютона-Лейбница.
+Уравнение (\ref{eq:NtLbFormula}) является дискретным аналогом формулы Ньютона-Лейбница.
 
   \subsection{Примеры}
   %TODO: Дополнить.
@@ -144,8 +149,18 @@
     \label{eq:SumByParts}
   \end{equation}
 
-  Формула \ref{eq:SumByParts} - формула Абеля суммирования по частям.
-  %TODO: add more info.
+  Формула (\ref{eq:SumByParts}) - формула Абеля суммирования по частям. \\
+
+  %It's a comment *
+  \begin{gather*}
+    \begin{subarray}{1}
+      \Delta (f_k g_k) = f_k \Delta g_k + g_{k+1} \Delta f_k \\
+      \Delta (f_k) = f_{k+1} - f_k \\
+      \Delta U(k) = \sum_{i=0}^{k+1} u(i) - \sum_{i=0}^{k} u(i) = u(k+1) \\
+    \end{subarray}
+  \end{gather*}
+
+  %TODO: add examples and move comment * to special zone
 
 \newpage
 
