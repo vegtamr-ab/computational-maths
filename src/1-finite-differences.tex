@@ -101,6 +101,15 @@
 \newpage
 
 \section{Суммирование функций}
+\marginpar
+{
+  \begin{gather*}
+    \begin{subarray}{1}
+      \Delta F(k)= \varphi (k) \\
+    \end{subarray}
+  \end{gather*}
+  \footnotesize По $\varphi (k)$ ищем $F(k)$
+}
 \begin{equation}
   \Delta F(k) = \phi(k)
 \end{equation}
@@ -116,10 +125,6 @@
 \end{equation}
 
 Уравнение (\ref{eq:NtLbFormula}) является дискретным аналогом формулы Ньютона-Лейбница.
-
-  \subsection{Примеры}
-  %TODO: Дополнить.
-
   \subsection{Формула Абеля суммирования по частям}
   \[\int_{a}^{b} u\,dv = uv \bigg|_{a}^{b} - \int_{a}^{b} v\,du\]
   \begin{equation}
@@ -150,6 +155,41 @@
   \end{equation}
 
   Формула (\ref{eq:SumByParts}) - формула Абеля суммирования по частям. \\
+  
+  \subsection{Примеры}
+    \[\sum_{k=0}^N ka^k\] \\
+    Будем использовать формулу Абеля суммирования по частям: \\
+    \[\sum_{k=m}^{n} u_{k+1} v_{k+1} = U_k v_k \bigg|_{m}^{n+1} - \sum_{k=m}^{n} U_k \Delta v_k\]
+    Но, чтобы произвести замену, нам нужно свдинуть индекс $k+1$ на единицу, то есть \\
+    \begin{equation*}
+      \begin{split}
+      v_k = k - 1
+      u_k = a^{k-1}
+      \end{split}
+    \end{equation*}
+    \marginpar
+    {
+      \footnotesize (*)Формула геометрической прогресси:
+      \footnotesize \[S_n = \frac{b_n*q-1}{q-1}\]
+    }
+    Тогда получим $U_k$
+    \marginpar
+    {
+      \footnotesize (**)Раписали сумму:
+      \begin{gather*}
+        \footnotesize \sum_{k=0}{N} \frac{1}{a} \frac{a^{k+1}-1}{a-1} = \\
+        = \sum_{k=0}^{N}a^k + \sum_{k=0}^{N}\frac{1}{a(a-1)}
+      \end{gather*}
+    }
+    \begin{equation*}
+      \begin{split}
+        U_k = \sum_{i=0}^{k}a^{i-1} = \frac{1}{a} \times \bigg[ \frac{a^{k+1}-1}{a-1} \bigg]^{(*)} \\
+        \sum_{k=0}^{N}ka^k = \frac{1}{a} \frac{a^{k+1}-1}{a-1}(k-1) \bigg|_{0}^{N+1} - \bigg[\sum_{k=0}{N} \frac{1}{a} \frac{a^{k+1}-1}{a-1} \bigg]^{(**)} = \\
+        = \frac{1}{a} \frac{a^{N+2}-1}{a-1}N + \frac{1}{a} - \frac{1}{a-1} \sum_{k=0}^{N}a^k + \frac{N+1}{a(a-1)} = \\
+        = \frac{Na^{N+2} - Na^{N+1} - a^{N+1} + a}{(a-1)^2}
+        = \frac{Na^{N+1}}{a-1} - \frac{a^{N+1} - a}{(a-1)^2}
+      \end{split}
+    \end{equation*}
 \newpage
 
 \end{document}
