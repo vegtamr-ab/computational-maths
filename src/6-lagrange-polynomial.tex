@@ -1,0 +1,79 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\title{06. Интерполяционный полином Лагранжа. Остаточный член полинома Лагранжа.}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Интерполяционный полином Лагранжа}
+\begin{equation}
+  Q_m(x_i) = f(x_i), \, i = 0, 1, \dots, m
+  \label{eq:PolSys}
+\end{equation}
+Построить интерполяционный полином можно и в явном виде, не решая систему (\ref{eq:PolSys}).
+\begin{gather*}
+  \omega(x) = (x - x_0)(x - x_1)\dots(x - x_m) \\
+  \omega_k(x) = \frac{\omega(x)}{x - x_k} = (x - x_0)\dots(x - x_{k-1})(x - x_{k+1})\dots(x - x_m)
+\end{gather*}
+
+\begin{equation}
+  Q_m(x) = \sum_{k=0}{m} \frac{\omega_k(x)}{\omega_k(x_k)} f(x_k)
+  \label{eq:LgPol}
+\end{equation}
+Уравнение \ref{eq:LgPol} - интерполяционный полином (в форме) Лагранжа. \\
+По построению очевидно, что $Q_m(x)$ - полином степени $m$.
+\[Q_m(x_i) = \frac{\omega_i(x_i)}{\omega_i(x_i)} f(x_i) = f(x_i), \, i=0,1,\dots,m\]
+\(\omega_k(x_i) = 0\), если \(k \ne i\)
+
+  \subsection{Алгоритм построения полинома Лагранжа}
+  \begin{enumerate}
+    \item Числитель с пропущенной точкой
+    \item Знаменатель - числитель, где вместо $x$ подставляем пропущенную точку
+    \item Значение функции в пропущенной точке
+  \end{enumerate}
+  \textbf{Пример для полинома $Q_2$:}
+  \[Q_0(x) = f(x_0)\]
+  \[Q_1(x) = \frac{x-x_1}{x_0-x_1}f(x_0) + \frac{x-x_0}{x_1-x_0}f(x_1)\]
+  \[Q_2(x) = \frac{(x-x_1)(x-x_2)}{(x_0-x_1)(x_0-x_2)}f(x_0) + \frac{(x-x_0)(x-x_2)}{(x_1-x_0)(x_1-x_2)}f(x_1) + \frac{(x-x_0)(x-x_1)}{(x_2-x_0)(x_2-x_1)}f(x_2)\]
+
+\newpage
+\section{Остаточный член интерполяционного полинома Лагранжа}
+\[f(x) = Q_m(x) + R_m(x)\]
+\(R_m(x)\) - остаточный член интерполяционного полинома, или погрешность интерполяционного полинома.
+\[\varphi(z) = f(z) - Q_m(z) - k\omega(z)^{(*)}\]
+\marginpar
+{
+  \footnotesize \((*)x_0, x_1, \dots, x_m\) - узлы; $k$ - некоторый параметр.
+}
+Пусть $x$ - точка в которой оценивается погрешность, не совпадающая с узлами интерполирования.
+\[\varphi(x_i) = 0, \, i = 0, 1, \dots, m\]
+Выберем $k$ таким образом, чтобы $\varphi(z)$ была равна $0$.
+\[\varphi(x) = 0 \Rightarrow k \frac{f(x) - Q_m(x)}{\omega(x)}\]
+Таким образом, $\varphi(z)$ имеет по меньшей мере $m+2$ нуля: $x_0, x_1, \dots, x_m, x$. \\
+\begin{align*}
+  \varphi^{'}(z) & \rightarrow m + 1 \\
+  \varphi^{''}(z) & \rightarrow m \\
+  \dots \\
+  \varphi^{(m + 1)}(z) & \rightarrow 1 \Rightarrow \varphi^{(m + 1)}(\eta) = 0
+\end{align*}
+
+Продифференцируем $\varphi$ $m+1$ раз и подставим $\eta$:
+\[0 = \varphi^{(m+1)}(\eta) = f^{(m+1)}(\eta) - 0 - k * (m + 1)! \Rightarrow k = \frac{f^{(m+1)}(\eta)}{(m+1)!}\]
+Подставляем выражение для $k$:
+\[f(x) = Q_m(x) + \frac{\omega(x)}{(m+1)!}f^{(m+1)}(\eta)\]
+Точка $\eta$ зависит от вида функции $f$, выбора узлов интерполирования и от точки, в которой оценивается погрешность.
+
+\end{document}
