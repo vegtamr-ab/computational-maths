@@ -1,0 +1,121 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\title{02. Суммирование функций. Формула Абеля суммирования по частям}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Суммирование функций}
+\marginpar
+{
+  \begin{gather*}
+    \begin{subarray}{1}
+      \Delta F(k)= \varphi (k) \\
+    \end{subarray}
+  \end{gather*}
+  \footnotesize По $\varphi (k)$ ищем $F(k)$
+}
+\begin{equation}
+  \Delta F(k) = \varphi(k)
+\end{equation}
+
+\begin{equation}
+  \begin{cases}
+    F_1 - F_0 = \varphi_0 \\
+    F_2 - F_1 = \varphi_1 \\
+    \cdots \\
+    F_{n+1} - F_n = \varphi_n
+  \end{cases} \Leftrightarrow F_{n+1} - F_0 = \sum_{k=0}^{n} \varphi_k
+  \label{eq:NtLbFormula}
+\end{equation}
+
+Уравнение (\ref{eq:NtLbFormula}) является дискретным аналогом формулы Ньютона-Лейбница.
+\subsection{Пример}
+\begin{equation*}
+  \begin{split}
+    \sum_{k=0}^{N} a^k = \bigg[ \Delta F(k) = a^k; \Delta a^k = a^k(a-1), a^k = \frac{\Delta a^k}{a-1}; F(k) = \frac{a^k}{a-1} \bigg] = \\
+    = \frac{a^{N+1}-1}{a-1} - \frac{1}{a-1} = \frac{a^{N+1}-1}{a-1} = \frac{1-a^{N+1}}{1-a}
+  \end{split}
+\end{equation*}
+
+  \subsection {Формула Абеля суммирования по частям}
+  \[\int_{a}^{b} u\,dv = uv \bigg|_{a}^{b} - \int_{a}^{b} v\,du\]
+  \begin{equation}
+    \begin{split}
+      \int_{a}^{b} \bigg| \frac{d}{dx}(U(x)v(x)) = u(x)v(x) + U(x)\frac{dv(x)}{dx} \\
+      \int_{a}^{b} u(x)v(x)\,dx = U(x)v(x) \bigg|_{a}^{b} - \int_{a}^{b} U(x)\frac{dv}{dx} \,dx
+    \end{split}
+  \end{equation}
+  \hrule
+  \marginpar
+  {
+    \begin{gather*}
+      \begin{subarray}{1}
+        (*) \\
+        \Delta (f_k g_k) = f_k \Delta g_k + g_{k+1} \Delta f_k \\
+        \Delta (f_k) = f_{k+1} - f_k \\
+        \Delta U(k) = \sum_{i=0}^{k+1} u(i) - \\
+        - \sum_{i=0}^{k} u(i) = u(k+1)
+      \end{subarray}
+    \end{gather*}
+  }
+  \begin{equation}
+    \begin{split}
+      \sum_{k=m}^{n} \bigg| \Delta(U(k) v(k)) = v(k+1) \Delta U(k) + U(k) \Delta v(k) = \\
+      = [ u(k+1) v(k+1) ]^{(*)} + U(k) \Delta v(k) \\
+      \sum_{k=m}^{n} u(k+1) v(k+1) = U(k) v(k) \bigg|_{m}^{n+1} - \sum_{k=m}^{n} U(k) \Delta v(k)
+    \end{split}
+    \label{eq:SumByParts}
+  \end{equation}
+
+  Формула (\ref{eq:SumByParts}) - формула Абеля суммирования по частям. \\
+
+  \subsubsection{Классический пример}
+    \[\sum_{k=0}^N ka^k\] \\
+    Будем использовать формулу Абеля суммирования по частям: \\
+    \[\sum_{k=m}^{n} u(k+1) v(k+1) = U(k) v(k) \bigg|_{m}^{n+1} - \sum_{k=m}^{n} U(k) \Delta v(k)\]
+    Но, чтобы произвести замену, нам нужно свдинуть индекс $k+1$ на единицу, то есть \\
+    \begin{equation*}
+      \begin{split}
+      v(k) = k - 1,
+      u(k) = a^{k-1}
+      \end{split}
+    \end{equation*}
+    \marginpar
+    {
+      \footnotesize (*)Формула геометрической прогрессии:
+      \footnotesize \[S_n = \frac{b_n*q-1}{q-1}\]
+    }
+    Тогда получим $U(k)$
+    \marginpar
+    {
+      \footnotesize (**)Раcписали сумму:
+      \begin{gather*}
+        \footnotesize \sum_{k=0}{N} \frac{1}{a} \frac{a^{k+1}-1}{a-1} = \\
+        = \sum_{k=0}^{N}a^k + \sum_{k=0}^{N}\frac{1}{a(a-1)}
+      \end{gather*}
+    }
+    \[U_k = \sum_{i=0}^{k}a^{i-1} = \frac{1}{a} \times \bigg[ \frac{a^{k+1}-1}{a-1} \bigg]^{(*)}]
+
+    \begin{equation*}
+      \begin{split}
+        \sum_{k=0}^{N}ka^k = \frac{1}{a} \frac{a^{k+1}-1}{a-1}(k-1) \bigg|_{0}^{N+1} - \bigg[\sum_{k=0}{N} \frac{1}{a} \frac{a^{k+1}-1}{a-1} \bigg]^{(**)} = \\
+        = \frac{1}{a} \frac{a^{N+2}-1}{a-1}N + \frac{1}{a} - \frac{1}{a-1} \sum_{k=0}^{N}a^k + \frac{N+1}{a(a-1)} = \\
+        = \frac{Na^{N+2} - Na^{N+1} - a^{N+1} + a}{(a-1)^2}
+        = \frac{Na^{N+1}}{a-1} - \frac{a^{N+1} - a}{(a-1)^2}
+      \end{split}
+    \end{equation*}
+
+\end{document}

@@ -1,0 +1,59 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\title{04. Введение в аппроксимацию функций. Основы интерполирования.}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Разделённые разности}
+
+Для равноотстоящих узлов таблицы конечные разности являются хорошей характеристикой изменения функции, аналогичной производной для непрерывного случая.
+При произвольном же расположении узлов таблицы целесообразно ввести понятие \textit{разделенной разности}.
+
+\[f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k}\] \\
+
+\textbf{Аналогично производным высших порядков вводятся разделённые разности высших порядков:}
+
+\begin{gather*}
+  f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k} \\
+  \dots \\
+  f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{f(x_{k+1}; x_{k+2}; \dots; x_{k+s})
+      - f(x_k; x_{k+1}; \dots; x_{k+s-1})}{x_{k+s} - x_k}
+\end{gather*}
+
+\textbf{Аналогично вводятся конечные разности {\textit{(П.1)}} высших порядков:}
+
+\begin{gather*}
+  \Delta f_k = f_{k+1} - f_k \\
+  \Delta^2 f_k = \Delta f_{k+1} - \Delta f_k = f_{k+2} - f_{k+1} - f_{k+1} + f_k = f_{k+2} - 2f_{k+1} + f_k \\
+  \Delta^3 f_k = \Delta^2 f_{k+1} - \Delta^2 f_k = f_{k+3} - 3f_{k+2} + 3f_{k+1} - f_k \\
+  \dots
+\end{gather*}
+
+Если узлы таблицы равноотстоящие, то можно использовать и конечные, и разделённые разности.
+
+  \subsection{Связь между конечными и разделенными разностями для равноотстоящих узлов}
+
+  \begin{gather*}
+    f(x_k; x_{k+1}) = \frac{f_{k+1} - f_k}{x_{k+1} - x_k} = \frac{\Delta f_k}{h} \\
+    f(x_k; x_{k+1}; x_{k+2}) = \frac{f(x_{k+1}; x_{k+2}) - f(x_k; x_{k+1})}{x_{k+2} - x_k}
+        = \frac{\frac{\Delta f_{k+1}}{h} - \frac{\Delta f_k}{h}}{2h} = \frac{\Delta^2 f_k}{2h^2}
+  \end{gather*}
+  По индукции легко показать, что: \\
+  \[f(x_k; x_{k+1}; \dots; x_{k+s}) = \frac{\Delta^s f_k}{s! \times h^s}\]
+\newpage
+
+\end{document}
