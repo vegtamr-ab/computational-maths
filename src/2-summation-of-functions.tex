@@ -45,8 +45,8 @@
 \subsection{Пример}
 \begin{equation*}
   \begin{split}
-    \sum_{k=0}^{N} a^k = \bigg[ \Delta F(k) = a^k; \Delta a^k = a^k(a-1), a^k = \frac{\Delta a^k}{a-1}; F(k) = \frac{a^k}{a-1} \bigg] = \\
-    = \frac{a^{N+1}-1}{a-1} - \frac{1}{a-1} = \frac{a^{N+1}-1}{a-1} = \frac{1-a^{N+1}}{1-a}
+    \sum_{k=0}^{N} a^k & = \bigg[ \Delta F(k) = a^k; \Delta a^k = a^k(a-1), a^k = \frac{\Delta a^k}{a-1}; F(k) = \frac{a^k}{a-1} \bigg] = \\
+    & = \frac{a^{N+1}-1}{a-1} - \frac{1}{a-1} = \frac{a^{N+1}-1}{a-1} = \frac{1-a^{N+1}}{1-a}
   \end{split}
 \end{equation*}
 
@@ -71,12 +71,12 @@
       \end{subarray}
     \end{gather*}
   }
+  \begin{align*}
+    \sum_{k=m}^{n} \bigg| & \Delta(U(k) v(k)) = v(k+1) \Delta U(k) + U(k) \Delta v(k) = \\
+    & = [ u(k+1) v(k+1) ]^{(*)} + U(k) \Delta v(k)
+  \end{align*}
   \begin{equation}
-    \begin{split}
-      \sum_{k=m}^{n} \bigg| \Delta(U(k) v(k)) = v(k+1) \Delta U(k) + U(k) \Delta v(k) = \\
-      = [ u(k+1) v(k+1) ]^{(*)} + U(k) \Delta v(k) \\
-      \sum_{k=m}^{n} u(k+1) v(k+1) = U(k) v(k) \bigg|_{m}^{n+1} - \sum_{k=m}^{n} U(k) \Delta v(k)
-    \end{split}
+    \sum_{k=m}^{n} u(k+1) v(k+1) = U(k) v(k) \bigg|_{m}^{n+1} - \sum_{k=m}^{n} U(k) \Delta v(k)
     \label{eq:SumByParts}
   \end{equation}
 
@@ -111,10 +111,9 @@
 
     \begin{equation*}
       \begin{split}
-        \sum_{k=0}^{N}ka^k = \frac{1}{a} \frac{a^{k+1}-1}{a-1}(k-1) \bigg|_{0}^{N+1} - \bigg[\sum_{k=0}{N} \frac{1}{a} \frac{a^{k+1}-1}{a-1} \bigg]^{(**)} = \\
-        = \frac{1}{a} \frac{a^{N+2}-1}{a-1}N + \frac{1}{a} - \frac{1}{a-1} \sum_{k=0}^{N}a^k + \frac{N+1}{a(a-1)} = \\
-        = \frac{Na^{N+2} - Na^{N+1} - a^{N+1} + a}{(a-1)^2}
-        = \frac{Na^{N+1}}{a-1} - \frac{a^{N+1} - a}{(a-1)^2}
+        \sum_{k=0}^{N}ka^k & = \frac{1}{a} \frac{a^{k+1}-1}{a-1}(k-1) \bigg|_{0}^{N+1} - \bigg[\sum_{k=0}{N} \frac{1}{a} \frac{a^{k+1}-1}{a-1} \bigg]^{(**)} = \\
+        & = \frac{1}{a} \frac{a^{N+2}-1}{a-1}N + \frac{1}{a} - \frac{1}{a-1} \sum_{k=0}^{N}a^k + \frac{N+1}{a(a-1)} = \\
+        & = \frac{Na^{N+2} - Na^{N+1} - a^{N+1} + a}{(a-1)^2} = \frac{Na^{N+1}}{a-1} - \frac{a^{N+1} - a}{(a-1)^2}
       \end{split}
     \end{equation*}
 

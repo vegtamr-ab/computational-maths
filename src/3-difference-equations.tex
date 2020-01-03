@@ -1,0 +1,224 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[most]{tcolorbox} % для управления цветом
+\usepackage{chngcntr}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\title{03. Разностное уравнение, его порядок. Линейные разностные уравнения первого порядка и порядка выше первого.}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\counterwithin*{equation}{section}% Сбрасывает счетчик формул в \section
+
+\section{Разностное уравнение. Его порядок}
+  Первоначально остановимся на дифференциальном уравнении. Дифференциальным уравнением называется уравнение, которое связывает исходную функцию и ее проиводную.
+  \begin{equation}
+  y^{s}(t) = F(t, y(t), y'(t), y''(t), ..., y^{s-1}(t)) \\
+  \end{equation}
+  \begin{center}
+  Разрешенное относительно страших производных
+  \end{center}
+
+  \begin{itemize}
+    \item \textbf{Поорядок дифференциального уравнения} определяется порядком старшей производной
+    \item Порядок уравнения определяет \textit{количество начальных условий}, необходимых для однозначного решения задачи, а если уравнеие является линейным относительно функции $y(t)$ и ее производных, то - \textit{количество линейно независимых решений}.
+  \end{itemize}
+
+  По аналогии можно было бы ввести понятие \textbf{порядка разностного уравнения}
+  \begin{equation}
+    2\Delta^3 x_n + 3\Delta^2 x_n - x_n = 0
+    \label{eq:DiffEq}
+  \end{equation}
+
+  Логично ожидать, что уравнение \ref{eq:DiffEq} имеет 3-й порядок, \textit{однако}
+  \marginpar
+  {
+    \footnotesize Из вывода конечных разностей высшего порядка
+  }
+  \begin{gather*}
+    2(x_{n+3} - 3x_{n+2} + 3x_{n+1} - x_n) + 3(x_{n+2} - 2x_{n+1} + x_n) - x_n = 0 \\
+    2x_{n+3} - 3x_{n+2} = 0 \Rightarrow x_{n+3} = 1.5x_{n+2}
+  \end{gather*}
+  \begin{center}
+    Порядок этого уравнения: $ n+3 - (n+2) = 1$
+  \end{center}
+  \begin{importantblock}
+    Для определения порядка разностных уравений необходио выразить все конечные разности через значения функций и привести подобные. Тогда разность между наибольшим и наименьшим значением аргумента определяет порядок разностного уравнения.
+  \end{importantblock}
+  \begin{gather*}
+    F(k, f(k), f(k+1),..., f(k+s)) = 0 \\
+    f(k+s)=F(k, f(k),..., f(k+s-1))
+  \end{gather*}
+  \begin{center}
+    \small Второе уравнение в виде, разреш. отн. фу-ии с наибольшим знач. арг.\\
+  \end{center}
+  Порядок обоих уравений $s=(k+s)-k$, таким образом для их однозначного решения необходимо задать $s$ начальных условий $f(0),f(1),...f(s-1)$
+
+  \subsection{Пошаговый метод решения разностного уравнения}
+  Рассмотрим общий вид разностного уравнения, разрешенного относительно функции с наибольшим аргументом
+  \begin{equation}
+    x_{n+s} = F(n, x_{n+s-1},x_{n+s-2},..., x_n)
+    \label{eq:DiffEqSpecView}
+  \end{equation}
+  \begin{center}
+    Это уравнение порядка $s$ $\Rightarrow$ необходимо задать \\
+    $s$ начальных условий $ x_0, x_1,..., x_{s-1} $
+  \end{center}
+  Полагаем в уравнении \ref{eq:DiffEqSpecView} $n=0, 1, 2, ...$
+  \begin{gather*}
+    x_{0+s} = F(0, x_{s-1},x_{s-2},..., x_0) \\
+    x_{s+1} = F(1, x_s,x_{s-1},..., x_1) \\
+    x_{s+2} = ...
+  \end{gather*}
+  Пошаговый метод совместно с начальными условиями всегда дает решение и обеспечивает существование и единственность решения начальной задачи для разностного уравнения.\\
+
+  В некоторых случаях возможно получить выражение $x(n)$ в явном виде, \textit{не используя пошаговый метод}.
+
+\section{Линейное разностное ур-ие 1-го порядка}
+  \marginpar
+  {
+    \footnotesize
+    {
+      $\alpha$ - const, \\
+      $\varphi(n)$ - ф-ия, \\
+      $x_0$ - нач.усл
+    }
+  }
+  \begin{equation}
+    x_{n+1}=\alpha x_n + \varphi(n)
+    \label{eq:LineDiffEq}
+  \end{equation}
+  Применим пошаговый метод:
+  \begin{gather*}
+    x_1 = \alpha x_0 + \varphi_0 \\
+    x_2 = \alpha x_1 + \varphi_1 = \alpha^2 x_0 + \alpha \varphi_0 + \varphi_1 \\
+    x_3 = \alpha x_2 + \varphi_2 = \alpha^3 x_0 + \alpha^2 \varphi_0 + \alpha \varphi_1 + \varphi_2 \\
+    ...
+  \end{gather*}
+  \begin{importantblock}
+    По индукции можно показать, что
+    \begin{equation}
+      x_n = \alpha^n x_0 + \sum_{k=0}^{n-1} \alpha^k \varphi_{n-1-k}
+      \end{equation}
+    точное решение уравнения (\ref{eq:LineDiffEq}).
+  \end{importantblock}
+  \marginpar
+  {
+    \small{$\sum_{k=0}^{n-1} \alpha^k \\ = \frac{1-\alpha^n}{1-\alpha}$ \\}
+    \footnotesize{См. \\ "02. Сумм. по частям"}
+  }
+  Рассмотрим случай, когда функция $\varphi(n)=\beta$ - $const$
+  \begin{equation}
+    x_n = \alpha^n x_0 + \bigg(\sum_{k=0}^{n-1}\alpha^k \bigg) \beta = \alpha^n x_0 + \frac{1-\alpha^n}{1-\alpha} \beta
+  \end{equation}
+
+\section{Линейное разностное ур-ие порядка \textit{выше 1-го}}
+  \begin{equation}
+    \alpha_0 x_{n+s} + \alpha_1 x_{n+s-1} +...+ \alpha_s x_n = \varphi(n)
+    \label{eq:LineDiffEqHighOrder}
+  \end{equation}
+  \begin{center}
+    $x_0, x_1, ..., x_{s-1}$ - $s$ начальных условий
+  \end{center}
+  Линейное \textit{неоднородное} уравнение порядка $s$ с постоянными коэффициентами.
+  \begin{importantblock}
+    Уравнение (\ref{eq:LineDiffEqHighOrder}) называется \textit{однородным}, если правая часть тождественно равна $0$ и \textit{неоднородным} в противном случае.
+  \end{importantblock}
+
+  \subsection{Решение}
+    Решение уравения \ref{eq:LineDiffEqHighOrder} начинаем с решения \textit{однородного} уравнения
+    \begin{equation}
+      \alpha_0 x_{n+s} + \alpha_1 x_{n+s-1} +...+ \alpha_s x_n = 0
+    \end{equation}
+
+    Будем искать \textbf{решение в виде}:
+    \begin{equation}
+    \Large {
+      \boxed{x_n = C\gamma^n}
+    }
+    \end{equation}
+%I'm sorry but it's too boring to name formulars labels and then I write its numbers like in lecture material
+    Подставим (3) в (2) и сократим на $C \gamma^n$
+    \begin{equation}
+      \boxed{\alpha_0 \gamma^s + \alpha_1 \gamma^{s-1} +...+ \alpha_s = 0}
+    \end{equation}
+    \begin{center}
+      \small{\textit{Характеристическое уравнение} для уравнений (1) и (2), а его корни $\gamma_1, \gamma_2,..., \gamma_s$- характеристические корни.}
+    \end{center}
+    Первоначально положим, что все корни уравнения (4) различны \boxed{i}. \\
+
+    Пусть $x^*_n$, $x_n^{**}$ - 2 любых решения уравнения (2). Тогда любая их линенйная комбинация $(D_1x_n^* + D_2x_n^{**})$ также является решением \\ уравнения (2). В этом \underline{можно убедиться}, подставив эту линейную комбинацию в уравнение (2) и сгруппировав однородные слогаемые: \\
+    \small
+    {
+      \begin{gather*}
+        \begin{split}
+          \alpha_0 x_{n+s}^* + \alpha_1 x_{n+s-1}^* +...+ \alpha_s x_n^* = 0\\
+          \alpha_0 x_{n+s}^{**} + \alpha_1 x_{n+s-1}^{**} +...+ \alpha_s x_n^{**} = 0
+          \end{split}
+      \end{gather*}
+      Тогда
+      \begin{gather*}
+        \alpha_0 (D_1x_{n+s}^*+D_2x_{n+s}^{**}) + \alpha_1 (D_1x_{n+s-1}^*+D_2x_{n+s}^{**-1}) +...+
+        \alpha_s (D_1x_{n}^*+D_2x_{n}^{**}) \stackrel{?}{=} 0 \\
+        D_1(\alpha_0 x_{n+s}^* + \alpha_1 x_{n+s-1}^* +...+ \alpha_s x_n^*) +
+        D_2(\alpha_0 x_{n+s}^{**} + \alpha_1 x_{n+s-1}^{**} +...+ \alpha_s x_n^{**}) \stackrel{?}{=} 0
+      \end{gather*}
+      Выражения в скобках равны $0$ по условию, поэтому $D_1\times0 + D_2\times0 = 0 + 0 = 0$
+      \begin{center}
+        $\Rightarrow$ $(D_1x_n^* + D_2x_n^{**})$ является решением уравения (2).
+      \end{center}
+    }
+
+    Поэтому общее решение уравнения (2) имеет вид:
+    \begin{equation}
+      x^ = \sum_{k=1}^{s}C_k\gamma_k^n
+    \end{equation}
+    \begin{center}
+      Решение однородного уравнения \\
+    \end{center}
+
+    Перейдем к неоднородному уравнению. \\
+
+    Пусть $\widetilde{x_n}$ - любое частное решение уравнения (1) (необязательно совпадающее с начальными условиями). \\
+    Тогда \textit{общее решние неоднородного уравнения} имеет вид:
+    \begin{equation}
+      \Large
+      {
+        \boxed{x_n = \widetilde{x_n} + \sum_{k=1}^{s}C_k\gamma_k^n} \\
+      }
+    \end{equation}
+
+    Далее для нахождения ${C_k}$ запишем формулу (6) для $n=0,1,...,s-1$, используя начальные условия, получив линейную систему из $s$ уравнений относительно $s$ неизвестных коэффициентов $C_k$. \\
+    \begin{itemize}
+      \item Если же в правой части исходного уравнения стоит линейная комбинация полиномов, экспонент, синусов и косинусов, то $\widetilde{x_n}$ подбирается в том же виде.
+      \item В общем случае для поиска $\widetilde{x_n}$ используется :\\
+        $\textbf{метод Лагранжа в вариации произвольных коэффициентов}$.
+    \end{itemize}
+
+    \vspace*{20mm}
+    \hrule
+    \boxed{i} Если в уравнении (4) есть кратные корни, например, $\gamma_1 \rightarrow r$ (встречается r раз).
+    Тогда в формулах (5) и (6) этому корню отвечает следующая комбинация линейно независимых решений:
+    \begin{center}
+      $\gamma_1^n = P_{r-1}(n)$ \\
+      \footnotesize{$P_{r-1}$ - произвольный полином в степени $r-1$}
+    \end{center}
+
+\end{document}
