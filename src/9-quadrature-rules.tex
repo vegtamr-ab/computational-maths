@@ -1,0 +1,301 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{commentblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{09. Квадратурные формулы левых, правых, и средних прямоугольников, трапеций, Симпсона. Малые и составные формулы, их остаточные члены.}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Квадратурные формулы}
+Так называются формулы для вичисления определённых интегралов.
+\begin{gather*}
+  I = \int_a^b f(x)\ dx \\
+  Q_0(x) = f(x_0) \\
+  I \approx \int_a^b f(x_0)\ dx = (b - a)f(x_0)
+\end{gather*}
+\begin{commentblock}
+  \begin{gather*}
+    f(x) = Q_m(x) + R_m(x) \\
+    \int_a^b f(x)\ dx = \int_a^b Q_m(x)\ dx \\
+    \varepsilon = \int_a^b R_m(x)\ dx
+  \end{gather*}
+\end{commentblock}
+\begin{tcolorbox}
+  \begin{equation}
+    x_0 = a \Rightarrow I \approx (b - a)f(a)
+    \label{eq:QRLR}
+  \end{equation}
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis} [
+        xlabel = {}, ylabel = {},
+        xmin = 0, ymin = 0,
+        xtick = {}, ytick = {},
+        no markers
+      ]
+
+        \addplot+[smooth] [
+        color = blue,
+        thick,
+        domain = 0:4,
+        samples = 300
+      ] coordinates { (0,3)(0.25,3.4)(0.5,3.7)(0.75,3.9)(1,4.05)(1.25,4.2)(1.5,4.35)(1.75,4.5)(2,4.6)(2.25,4.7)(2.5,4.8)(2.75,4.9)(3,5) };
+
+        \addplot+[smooth, fill=orange, fill opacity=0.1] [
+        color = orange,
+        ultra thin,
+        domain = 0:3,
+        samples = 10
+      ] { 3 } \closedcycle;
+
+      \end{axis}
+    \end{tikzpicture} \\
+    Квадратурная формула левых прямоугольников.
+  \end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}
+  \begin{equation}
+    x_0 = b \Rightarrow I \approx (b - a)f(b)
+    \label{eq:QRRR}
+  \end{equation}
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis} [
+        xlabel = {}, ylabel = {},
+        xmin = 0, ymin = 0,
+        xtick = {}, ytick = {},
+        no markers
+      ]
+
+        \addplot+[smooth] [
+        color = blue,
+        thick,
+        domain = 0:4,
+        samples = 300
+      ] coordinates { (0,3)(0.25,3.4)(0.5,3.7)(0.75,3.9)(1,4.05)(1.25,4.2)(1.5,4.35)(1.75,4.5)(2,4.6)(2.25,4.7)(2.5,4.8)(2.75,4.9)(3,5) };
+
+        \addplot+[smooth, fill=orange, fill opacity=0.1] [
+        color = orange,
+        ultra thin,
+        domain = 0:3,
+        samples = 10
+      ] { 5 } \closedcycle;
+
+      \end{axis}
+    \end{tikzpicture} \\
+    Квадратурная формула правых прямоугольников.
+  \end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}
+  \begin{equation}
+    x_0 = \frac{a+b}{2} \Rightarrow I \approx (b - a)f(\frac{a+b}{2})
+    \label{eq:QRMR}
+  \end{equation}
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis} [
+        xlabel = {}, ylabel = {},
+        xmin = 0, ymin = 0,
+        xtick = {}, ytick = {},
+        no markers
+      ]
+
+        \addplot+[smooth] [
+        color = blue,
+        thick,
+        domain = 0:4,
+        samples = 300
+      ] coordinates { (0,3)(0.25,3.4)(0.5,3.7)(0.75,3.9)(1,4.05)(1.25,4.2)(1.5,4.35)(1.75,4.5)(2,4.6)(2.25,4.7)(2.5,4.8)(2.75,4.9)(3,5) };
+
+        \addplot+[smooth, fill=orange, fill opacity=0.1] [
+        color = orange,
+        ultra thin,
+        domain = 0:3,
+        samples = 10
+      ] { 4.35 } \closedcycle;
+
+      \end{axis}
+    \end{tikzpicture} \\
+    Квадратурная формула средних прямоугольников.
+  \end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}
+  \[Q_1(x) = \frac{x-b}{a-b}f(a)+\frac{x-a}{b-a}f(b)\]
+  \begin{equation}
+    I \approx \int_a^b Q_1(x)\ dx = \frac{b-a}{2}(f(a) + f(b))
+    \label{eq:QRT}
+  \end{equation}
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis} [
+        xlabel = {}, ylabel = {},
+        xmin = 0, ymin = 0,
+        xtick = {}, ytick = {},
+        no markers
+      ]
+
+        \addplot+[smooth] [
+        color = blue,
+        thick,
+        domain = 0:4,
+        samples = 300
+      ] coordinates { (0,3)(0.25,3.4)(0.5,3.7)(0.75,3.9)(1,4.05)(1.25,4.2)(1.5,4.35)(1.75,4.5)(2,4.6)(2.25,4.7)(2.5,4.8)(2.75,4.9)(3,5) };
+
+        \addplot+[smooth, fill=orange, fill opacity=0.1] [
+        color = orange,
+        ultra thin,
+        domain = 0:3,
+        samples = 10
+      ] coordinates { (0,3)(3,5) } \closedcycle;
+
+      \end{axis}
+    \end{tikzpicture} \\
+    Квадратурная формула трапеций.
+  \end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}
+  \[Q_2(x); x_0 = a, x_1 = \frac{a+b}{2}, x_2 = b\]
+  \begin{equation}
+    I \approx \int_a^b Q_2(x)\ dx = \frac{b-a}{6}(f(a) + 4f(\frac{a+b}{2}) + f(b))
+    \label{eq:QRS}
+  \end{equation}
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis} [
+        xlabel = {}, ylabel = {},
+        xmin = 0, ymin = 0,
+        xtick = {}, ytick = {},
+        no markers
+      ]
+
+        \addplot+[smooth] [
+        color = blue,
+        thick,
+        domain = 0:4,
+        samples = 300
+      ] coordinates { (0,3)(0.25,3.4)(0.5,3.7)(0.75,3.9)(1,4.05)(1.25,4.2)(1.5,4.35)(1.75,4.5)(2,4.6)(2.25,4.7)(2.5,4.8)(2.75,4.9)(3,5) };
+
+        \addplot+[smooth, fill=orange, fill opacity=0.1] [
+        color = orange,
+        ultra thin,
+        domain = 0:3,
+        samples = 10
+      ] { (x-1.5)*(x-3)*2/3 - 4.35*x*(x-3)/2.25 + 5*x*(x-1.5)/4.5 } \closedcycle;
+
+      \end{axis}
+    \end{tikzpicture} \\
+    Метод параболы или квадратурная формула Симпсона.
+  \end{center}
+\end{tcolorbox}
+Для повышения точности исходный промежуток разбивается на участки, на каждом из них применяется какая-то квадратурная формула, а результаты складываются.
+Эти квадратурные формулы получили название
+
+\section{Составные квадратурные формулы}
+Разобьём исходный промежуток на $m$ участков одинаковой длины: \\
+\([x_0, x_1], [x_1, x_2], \dots, [x_k, x_{k+1}], \dots, [x_{N-1}, x_N]*\)
+\marginpar
+{
+  \footnotesize (*)
+  \begin{gather*}
+    \footnotesize x_k = x_0 + k\frac{b-a}{N} \\
+    x_0 = a, x_N = b \\
+    x_{k+1} - x_k = \frac{b-a}{N}
+  \end{gather*}
+}
+На каждом участке вычисляем интеграл:
+\[I_k = \int_{x_k}^{x_{k+1}} f(x)\ dx \approx \frac{b-a}{N}f(x_k)\]
+\begin{importantblock}
+  \[I = \int_a^b f(x)\ dx\]
+  \begin{align*}
+    \stepcounter{equation}
+    I & \approx \frac{b-a}{N} \sum_{k=0}^{N-1} f(x_k) \settag{1*} \\
+    I & \approx \frac{b-a}{N} \sum_{k=1}^{N} f(x_k) \settag{2*} \\
+    I & \approx \frac{b-a}{N} \sum_{k=0}^{N-1} f(x_k + \frac{b-a}{2N}) \settag{3*}
+  \end{align*}
+\end{importantblock}
+\[I_k = \int_{x_k}^{x_{k+1}} f(x)\ dx \approx \frac{b-a}{2N}(f(x_k) + f(x_{k+1}))\]
+\begin{importantblock}
+  \begin{align*}
+    \stepcounter{equation}
+    I & \approx \frac{b-a}{2N} \sum_{k=1}^{N-1} f(x_k) \settag{4*}
+  \end{align*}
+\end{importantblock}
+В формуле Симпсона выберем $N$ чётных. Количество промежутков будет $N/2$, каждый промежуток будет вдвое большей длины.
+\[I_k = \int_{x_k}^{x_{k+2}} f(x)\ dx \approx \frac{b-a}{3N}(f(x_k) + 4f(x_{k+1}) + f(x_{k+2}))\]
+\begin{importantblock}
+  \begin{align*}
+    \stepcounter{equation}
+    I & \approx \frac{b-a}{3N}(f(a) + 4(f_1 + f_3 + \dots + f_{N-1}) \\
+      & + 2(f_2 + f_4 + \dots + f_{N-2}) + f(b)) \settag{5*}
+  \end{align*}
+\end{importantblock}
+
+\section{Погрешности квадратурных формул}
+Теорема о 'средней' точке:
+\[\int_a^b f(x)g(x)\ dx = g(c) \int_a^b f(x)\ dx, c \in [a, b]\]
+Чтобы теорема работала, функция, стоящая под знаком интеграла, должна быть знакопостоянна.
+Теорема о 'средней' точке-2:
+\[\frac{1}{N}\sum_{k=1}{N}f(x_k) = f(\eta)\]
+
+  \subsection{Погрешности несоставных формул}
+  \[\varepsilon = \int_a^b R_m(x)\ dx\]
+  Погрешность равна интегралу от остаточного члена интерполяционного полинома.
+  \[R_0(x) = \frac{x-a}{1!}f^{'}(\eta)\]
+  \begin{align*}
+    \varepsilon_{\text{л.пр.}}  &= \int_a^b \frac{x-a}{1!} f^{'}(\eta)\ dx = \int_a^b (x-a)\ dx\ f^{'}(\eta^*) = \frac{(b-a)^2}{2}f^{'}(\eta^*) \\
+    \varepsilon_{\text{пр.пр.}} &= \int_a^b \frac{x-b}{1!} f^{'}(\eta)\ dx = - \frac{(b-a)^2}{2}f^{'}(\eta^*) \\
+    \varepsilon_{\text{трап.}}  &= \int_a^b \frac{(x-a)(x-b)}{2!} f^{''}(\eta)\ dx = - \frac{(b-a)^2}{12}f^{''}(\eta^*)
+  \end{align*}
+  \[\varepsilon_{\text{ср.пр.}} = \int_a^b \frac{x-\frac{a+b}{2}}{1!} f^{'}(\eta)\ dx\]
+  Теорема о 'среднем' здесь не работает, используется другой способ.
+  Рассмотрим разложение функции в степенной ряд Тейлора до $^2$  в точке $\frac{a+b}{2}$:
+  \[f(x) = f(\frac{a+b}{2}) + \frac{x-\frac{a+b}{2}}{1!} f^{'}(\frac{a+b}{2}) + \frac{(x-\frac{a+b}{2})}{2!} f^{''}(\eta)\]
+  Проинтегрируем слева и справа на $[a; b]$:
+  \[\int_a^b f(x)\ dx = (b-a)f(\frac{a+b}{2}) + \textbf{0} + \underbrace{\int_a^b \frac{(x-\frac{a+b}{2})^2}{2!} f^{''}(\eta)\ dx}_{\varepsilon_{\text{ср.пр.}}}\]
+  \[\varepsilon_{\text{ср.пр.}} = \int_a^b \frac{(x-\frac{a+b}{2})^2}{2!} f^{''}(\eta)\ dx = \frac{(b-a)^3}{24}f^{''}(\eta^*)\]
+  \[\varepsilon_{\text{симп.}} = \int_a^b \frac{(x-a)(x-\frac{a+b}{2})(x-b)}{3!} f^{'''}(\eta)\ dx\]
+  Теорема о 'среднем' не работает, погрешность выводится по другому.
+  \[\varepsilon_{\text{симп.}} = - \frac{(b-a)^5}{2880} f^{''''}(\eta^*)\]
+  \begin{importantblock}
+    \begin{align*}
+      \varepsilon_{\text{л.пр.}}  &= \frac{(b-a)^2}{2}f^{'}(\eta^*) \\
+      \varepsilon_{\text{пр.пр.}} &= - \frac{(b-a)^2}{2}f^{'}(\eta^*) \\
+      \varepsilon_{\text{трап.}}  &= - \frac{(b-a)^2}{12}f^{''}(\eta^*) \\
+      \varepsilon_{\text{ср.пр.}} &= \frac{(b-a)^3}{24}f^{''}(\eta^*) \\
+      \varepsilon_{\text{симп.}}  &= - \frac{(b-a)^5}{2880} f^{''''}(\eta^*)
+    \end{align*}
+  \end{importantblock}
+  
+
+\end{document}
