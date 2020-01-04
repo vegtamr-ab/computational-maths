@@ -3,12 +3,18 @@
 \usepackage{wrapfig}
 \usepackage{amsmath}
 \usepackage{pgfplots}
+\usepackage[most]{tcolorbox} % для управления цветом
 %Russian-specific packages
 %--------------------------------------
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[russian, english]{babel}
 %--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
 
 \title{07. Выбор узлов интерполирования. Интерполяционный полином Ньютона для равно- и неравноотстоящих узлов.}
 \author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
@@ -100,10 +106,8 @@
     \item Строим $Q_{m+1}(x)$
     \item Оцениваем погрешность по разности значений этих полиномов в нужной точке
   \end{enumerate}
-  Использовать для этих целей полином Лагранжа неэффективно. На практике хотелось бы построить интерполяционный полином так, чтобы полином степени $m+1$ получался
-    добавлением к нему какого-то слагаемого степени $m$, как это происходило в построении степенного ряда Тейлора.
-
-\newpage
+  Использовать для этих целей полином Лагранжа неэффективно. На практике хотелось бы построить интерполяционный полином так, чтобы полином степени $m+1$
+  получался добавлением к нему какого-то слагаемого степени $m$, как это происходило в построении степенного ряда Тейлора.
 
 \section{Полином Ньютона}
 Рассмотрим первую разделённую разность:
@@ -112,18 +116,24 @@
   f(x) = \underbrace{f(x_0)}_{Q_0} + \underbrace{(x - x_0)(f(x; x_0))}_{R_0}
   \label{eq:DDNewt}
 \end{equation}
+Рассмотрим вторную разделенную разность:
 \[f(x; x_0; x_1) = \frac{f(x; x_0) - f(x_0; x_1)}{x - x_1}\]
 Выразим первую разделённую разность через вторую и подставим в формулу (\ref{eq:DDNewt}):
 \[f(x) = \underbrace{\underbrace{f(x_0)}_{Q_0} + (x - x_0)f(x_0; x_1)}_{Q_1} + \underbrace{(x - x_0)(x - x_1)f(x; x_0; x_1)}_{R_1}\]
 Продолжая этот процесс, и выражая вторую разделённую разность через третью, третью через четвертую и т.д., получаем:
 \[f(x) = Q_m(x) + \underbrace{(x - x_0)(x - x_1)\dots(x - x_m)f(x; x_0; x_1; \dots; x_m)}_{R_m}\]
+\vspace{10mm}
 \begin{equation}
   \begin{aligned}
-    Q_m(x) &= f(x_0) + (x - x_0)f(x_0; x_1) + (x - x_0)(x - x_1)f(x_0; x_1; x_2) +\\
-           & + \dots + (x - x_0)\dots(x - x_{m-1})f(x_0; x_1; \dots; x_m)
+    Q_m(x) &= f(x_0) + (x - x_0)f(x_0; x_1)+(x - x_0)(x - x_1)f(x_0; x_1; x_2) +\\
+          & + \dots + (x - x_0)\dots(x - x_{m-1})f(x_0; x_1; \dots; x_m) \\
   \end{aligned}
   \label{eq:GenNewtPol}
 \end{equation}
+\begin{center}
+  \textbf{Полином Ньютона для неравноотстоящих узлов}
+\end{center}
+
 Если узлы интерполирования равноотстоящие, то в формуле (\ref{eq:GenNewtPol}) можно заменить разделённые разности на конечные. С этой целью выполним замену переменных:
 \begin{equation*}
   \begin{cases}
@@ -131,21 +141,44 @@
     x_k = x_0 + kh
   \end{cases}, \, \text{в узлах $t$ - целое}
 \end{equation*}
-\[f(x_0; \dots; x_m) = \frac{\Delta^mf(x_0)}{m!\ h^m}; \; (x - x_k) = h(t - k)\]
-Тогда формула (\ref{eq:GenNewtPol}) принимает следующий вид:
+
+\begin{equation}
+  f(x_0; \dots; x_m) = \frac{\Delta^mf(x_0)}{m!\ h^m} \\
+  (x - x_k) = h(t - k)
+  \label{eq:ConclusionFormls}
+\end{equation}
+
+\begin{flushright}
+  \footnotesize {
+    Знаем, что $x = x_0 + ht$ \\
+    $x-x_1 = x-x_0-h = th-h = h(t-1)$ \\
+    Тогда $x-x_k = h(t-k)$ \\
+    $\Rightarrow (x-x_0)(x-x_1) = t(t-1)h^2$ }
+\end{flushright}
+
+Тогда формула (\ref{eq:GenNewtPol}) при подставновке (\ref{eq:ConclusionFormls}) принимает следующий вид:
 \begin{align*}
-  Q_m(x_0 + ht) &= f(x_0) + \frac{t}{1!}\Delta f(x_0) + \frac{t(t-1)}{2!}\Delta^2f(x_0) + \\
+  Q_m(x_0 + ht) & = f(x_0) + \frac{t}{1!}\Delta f(x_0) + \frac{t(t-1)}{2!}\Delta^2f(x_0) + \\
                 & + \dots + \frac{t(t-1)\dots(t-m+1)}{m!}\Delta^mf(x_0)
-\end{align*} - полином Ньютона для равноотстоящих узлов \\
-\newpage
-Полиномы строятся последовательно в соответствии со следующей таблицей: \\
-\begin{tabular}{ c|c|c|c }
-  $x$ & $f(x)$ & $\Delta f(x)$ & $\Delta^2f(x)$ \\
-  \hline
-  $x_0$ & $f(x_0)$ & $\underline{\Delta f(x)}$ & $\underline{\underline{\Delta^2f(x)}}$ \\
-  $x_1$ & $\underline{f(x_1)}$ & $\underline{\underline{\Delta f(x_1)}}$ & \\
-  $x_2$ & $\underline{\underline{f(x_2)}}$ & &
-\end{tabular} \\
-Каждая новая степень полинома требует построения очередной диагонали в таблице.
+\end{align*}
+  \begin{center}
+  \textbf{Полином Ньютона для равноотстоящих узлов}
+\end{center}
+
+\vspace{5mm}
+Полиномы строятся последовательно в соответствии со следующей таблицей:
+
+\begin{minipage}{\linewidth}
+  \begin{wraptable}{l}{6cm}
+    \begin{tabular}{ c|c|c|c }
+      $x$ & $f(x)$ & $\Delta f(x)$ & $\Delta^2f(x)$ \\
+      \hline
+      $x_0$ & $f(x_0)$ & $\underline{\Delta f(x)}$ & $\underline{\underline{\Delta^2f(x)}}$ \\
+      $x_1$ & $\underline{f(x_1)}$ & $\underline{\underline{\Delta f(x_1)}}$ & \\
+      $x_2$ & $\underline{\underline{f(x_2)}}$ & &
+    \end{tabular}
+  \end{wraptable}
+    Каждая новая степень полинома требует построения очередной диагонали в таблице.
+\end{minipage}
 
 \end{document}
