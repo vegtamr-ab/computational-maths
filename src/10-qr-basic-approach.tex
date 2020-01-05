@@ -1,0 +1,110 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{10. Общий подход к построению квадратурных формул. Квадратурные формулы Ньютона-Котеса, Чебышёва, Гаусса}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Общий подход}
+Все ранее полученные (не составные) квадратурные формулы имели следующий вид:
+\begin{equation}
+  \int_a^b f(x)\ dx \approx \sum_{k=1}^S A_k f(x_k)
+  \label{eq:QRBA}
+\end{equation}
+Выдвигается идея, выбрать $A_k$ и $x_k$ так, чтобы формула (\ref{eq:QRBA}) была точна для полиномов. \\
+Если $f(x)$ хорошо описывается полиномом этой степени, то и ответ будет хороший. В противном случае, применяем составные формулы.
+\begin{enumerate}
+  \item $f(x) = \alpha - const$
+  \item $f(x) = x$
+  \item $f(x) = x^2$ \\
+        $\dots$
+  \item $f(x) = x^n$
+\end{enumerate}
+\begin{importantblock}
+  \begin{equation}
+    \begin{cases}
+      \sum_{k=1}^S A_k = b - a \\
+      \sum_{k=1}^S A_k x_k = \frac{b^2-a^2}{2} \\
+      \sum_{k=1}^S A_k x_k^2 = \frac{b^3-a^3}{3} \\
+      \cdots \\
+      \sum_{k=1}^S A_k x_k^n = \frac{b^{N+1}-a^{N+1}}{N+1}
+      \end{cases}
+    \label{eq:QRSys}
+  \end{equation}
+\end{importantblock}
+Различные семейства квадратурных формул отличаются друг от друга выбором $\underbrace{x_k}_{\text{узлов}}$ и $\underbrace{A_k}_{\text{весов}}$, на которые
+  накладываются дополнительные условия.
+
+\section{Семейство квадратурных формул Ньютона-Котеса}
+\begin{importantblock}
+  Узлы $x_k$ - равноотстоящие.
+\end{importantblock}
+Для равноотстоящих узлов при использовании составных квадратурных формул ранее вычисленные $f(x_k)$ не надо вычислять вновь, что уменьшает объём вычислений
+  примерно в два раза. Система (\ref{eq:QRSys}) имеет при этом единственное решение.
+\begin{importantblock}
+  Формулы Ньютона-Котеса гарантированно точны для полиномов степени $S-1$.
+\end{importantblock}
+Если решать систему (\ref{eq:QRSys}) для $S = 1, 2, 3\dots$, то получим квадратурные формулы, которые получали из интерполяционных полиномов.
+
+\section{Семейство квадратурных формул Чебышёва}
+\begin{importantblock}
+  Формулы Чебышёва наиболее часто используются, когда $f(x_k)$ измерены с заметной погрешностью. С этой целью $A_k$ выбираются одинаково.
+\end{importantblock}
+Из уравнения (\ref{eq:QRBA}) видим, что $A = \frac{b-a}{S}$, тогда:
+\[\int_a^b f(x)\ dx \approx \frac{b-a}{S} \sum_{k=1}^S f(x_k)\]
+Решение системы (\ref{eq:QRBA}) должно существовать, быть вещественным, и все $x_k$ должны принадлежать промежутку $(a; b)$. \\
+Дальнейшее повышение точности реализуется за счет составных квадратурных формул.
+\begin{importantblock}
+  Формулы Чебышёва гарантированно точны для полиномов степени $S$, при этом они существуют только для $S = 1-7, 9$.
+\end{importantblock}
+
+\section{Семейство квадратурных формул Гаусса}
+\begin{importantblock}
+  В формулах Гаусса нет никаких дополнительных ограничений, и все $2S$ параметров направлены на решение системы (\ref{eq:QRSys}).
+\end{importantblock}
+Система (\ref{eq:QRSys}) имеет единственное решение для любого значения $S$ для формул Гаусса.
+\begin{importantblock}
+  Формулы Гаусса гарантированно точны для полиномов степени $2S-1$
+\end{importantblock}
+Их другое название - формулы наивысшей алгебраической степени точности. \\
+
+\begin{mainblock}
+  Значения $A_k$ и $x_k$ для всех квадратурных формул заносят в справочники для стандартного промежутка (чаще всего это $[-1; 1]$ или $[0; 1]$), а для
+    произвольного промежутка $[a; b]$ выполняют замену переменных:
+    \begin{gather*}
+      x = \frac{a+b}{2} + \frac{b-a}{2}t,\, t \in [-1; 1] \\
+      dx = \frac{b-a}{2}dt \\
+      \Rightarrow \int_a^b f(x)\ dx = \frac{b-a}{2} \int_{-1}^{+1} f(\frac{a+b}{2}+\frac{b-a}{2}t)\ dt \\
+      \approx \frac{b-a}{2} \sum_{k=1}^S A_k f(\frac{a+b}{2} + \frac{b-a}{2}t_k)
+    \end{gather*}
+\end{mainblock}
+
+\end{document}
