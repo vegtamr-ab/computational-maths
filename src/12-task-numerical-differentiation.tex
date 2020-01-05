@@ -1,0 +1,167 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[most]{tcolorbox} % для управления цветом
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{12. Задача численного дифференцирования. Влияние вычислительной погрешности}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Задача численного дифференцирования}
+\begin{minipage}{\linewidth}
+  \begin{wraptable}{l}{4.5cm}
+    \begin{tabular}{ c|c|с }
+      $x$ & $f(x)$ & $f^{'}(x)$ \\
+      \hline
+      $x_0$ & $f(x_0)$ & $?$ \\
+      $x_1$ & $f(x_1)$ & $?$ \\
+      $\cdots$ & $\cdots$ & $\cdots$ \\
+      $x_m$ & $f(x_m)$ & $?$
+    \end{tabular}
+  \end{wraptable}
+  Для таблично заданной функции требуется оценить значения производной $f(x)$ в узлах таблицы.
+  \begin{center}
+    Но всегда помним, что писал \\
+    Хемминг: \textit{"Прежде, чем решать задачу, подумай, что делать с ее решением."}
+  \end{center}
+\end{minipage}
+
+\vspace{5mm}
+\begin{center}
+  PLOT THERE
+\end{center}
+Для функции $f(x)$ апроскимирующая функция $g(x)$ достаточно близка, поэтому близки и их интегралы,
+но производные совпадают лишь в нескольких точках.\\
+
+Рассмотрим еще один убедительный пример. Имеются две функции $f(x)$ и $g(x)$ и их производные:
+\begin{align*}
+  f(x) &;  & &g(x)=f(x)+\frac{1}{N}sin(N^2x); \\
+  \frac{df(x)}{dx} &; & &\frac{dg(x)}{dx}=\frac{df(x)}{dx}+Ncos(N^2x).
+\end{align*}
+Очевидно, что, чем больше N,тем функции становятся ближе друг к другу, но в тот же момент их производные - наоборот.
+Таким образом, \textit{близость f(x) и g(x) еще не гарантирует близости их производных.} \\
+
+Для численного дифференцирования:
+\begin{itemize}
+  \item функция должна изменяться достаточно плавно,
+  \item шаг должен быть согласован с быстротой изменения функции,
+  \item таблица не должна быть "зашумлена" погрешностью исходных данных.
+\end{itemize}
+
+Аппроксимуруем исходную функцию интерполяционным полиномом, и его производная
+даст формулу численного дифференцирования, а производная от остаточного члена позволит оценить погрешность:
+\begin{importantblock}
+  \begin{gather*}
+    f(x)=Q_m(x)+R_m(x) \\
+    f^{'}(x_k) \approx Q_m^{'}(x_k) \settag{*} \\
+    \varepsilon = R_m^{'}(x_k) \settag{**} \\
+  \end{gather*}
+\end{importantblock}
+
+Получим формулы для численного дифференцирования для равноотстоящих узлов:
+\begin{equation*}
+  Q_1(x)=\frac{x-x_{k+1}}{x_k-x_{k+1}}f_k + \frac{x-x_k}{x_{k+1}-x_k}f_{k+1}}
+\end{equation*}
+Дифференцируем и получаем значение производной в точках $x_k$ и $x_{k+1}$
+\begin{gather}
+  f^{'}(x_k) \approx \frac{f_{k+1}-f_k}{h} \\
+  f^{'}(x_{k+1}) \approx \frac{f_{k+1}-f_k}{h}
+\end{gather}
+\begin{equation*}
+  \varepsilon_1 = R_m^{'}(x_k)
+\end{equation*}
+\marginpar
+{
+  \vspace{2mm}
+  \footnotesize{$\eta \rightarrow \eta(x)$}
+}
+\begin{equation*}
+  R_1(x) = \frac{(x-x_k)(x-x_{k+1})}{2!}f^{''}(\eta)
+\end{equation*}
+\begin{center}
+  \small{Остаточный член интерполяционного полинома}
+\end{center}
+При взятии производной получаются три слагаемых
+\begin{equation*}
+  R_1^{'}=\frac{x-x_{k+1}}{2!}f^{''}(\eta) + \frac{x-x_k}{2!}f^{''}(\eta) + \frac{(x-x_k)(x-x_{k+1})}{2!}f^{'''}(\eta)\eta^{'}(x),
+\end{equation*}
+два из которых обращаются в 0 при подстановке $x_k$ и $x_{k-1}$:
+\begin{gather*}
+  \varepsilon_1(x_k)= - \frac{h}{2}f^{''}(\eta) \settag{1*} \\
+  \varepsilon_1(x_{k+1})=\frac{h}{2}f^{''}(\eta) \settag{2*}.
+\end{gather*}
+
+Сделаем аналогичные вычисления для интерполяционного полинома 2-й стпени $Q_2(x)$ с узлами $x_k, x_{k+1},x_{k+2}$.
+\begin{gather}
+  f^{'}(x_k) \approx \frac{1}{2h}(-3f_k+4f_{k+1}-f_{k+1}) \\
+  f^{'}(x_{k+1}) \approx \frac{1}{2h}(f_{k+2}-f_k) \\
+  f^{'}(x_{k+2}) \approx \frac{1}{2h}(3f_{k+2}-4f_{k+1}+f_k)
+\end{gather}
+Погрешность
+\begin{equation*}
+  R_2(x)=\frac{(x-x_k)(x-x_{k+1})(x-x_{k+2})}{3!}f^{'''}(\eta)
+\end{equation*}
+\begin{gather*}
+  \varepsilon_2(x_k) = \frac{h^2}{3}f^{'''}(\eta) \settag{3*} \\
+  \varepsilon_2(x_{k+1}) = - \frac{h^2}{6}f^{'''}(\eta) \settag{4*} \\
+  \varepsilon_2(x_{k+2}) = \frac{h^2}{3}f^{'''}(\eta) \settag{5*}
+\end{gather*}
+
+\begin{importantblock}
+  На меньшую погрешность можно расчитывать при использовании формулы (4), что и делает ее наиболее популярной;
+  формулы (3) и (5) используются для дифференцирования в начале и конце таблицы.\\
+\end{importantblock}
+
+Продифференцируем интерполяционный полином 2-й степени дважды, тогда простейшая формула для 2-й производной:
+\begin{equation}
+  f^{''}(x_{k+1}) \approx \frac{f_{k+2}-2f_{k+1}+f_k}{h^2}
+\end{equation}
+Привлекая новые узлы интерполирования, можно так и дальше дифференцировать полиномы.\\
+
+Важным на практике является \textit{выбор шага $h$}. Ограничение сверху накладывается величиной погрешности,
+а снизу - точностью табличных данных для $f(x)$.
+
+\section{Влияние вычислительной погрешности}
+\marginpar
+{
+  \vspace{6mm}
+  \footnotesize{это формулы (1) и (1*)}
+}
+\begin{gather*}
+  f^{'} \approx \frac{f_{k+1}-f_k}{h} \\
+  \varepsilon_1 = - \frac{h}{2}f^{''}(\eta)
+\end{gather*}
+Если значения $f_k$ и $f_{k+1}$ определены с погрешностью $\Delta_k$ и $\Delta_{k+1}$ соответсвенно, то
+\begin{equation*}
+  \boxed{|\varepsilon_{\text{общ}}| \le \frac{h}{2}|f^{''}(\eta)| + \frac{|\Delta_{k+1}-\Delta_K|}{h}}
+\end{equation*}
+
+Оптимальное значение шага $h_{\text{опт}}$ отвечает ситуации, когда оба слагаемых равны друг другу.
+\begin{center}
+  PLOT HERE
+\end{center}
+
+\end{document}

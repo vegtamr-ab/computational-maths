@@ -13,7 +13,7 @@
 %--------------------------------------
 
 \definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
-\newtcolorbox{commentblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
 boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
 \definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
 \newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
@@ -40,13 +40,11 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
   Q_0(x) = f(x_0) \\
   I \approx \int_a^b f(x_0)\ dx = (b - a)f(x_0)
 \end{gather*}
-\begin{commentblock}
   \begin{gather*}
     f(x) = Q_m(x) + R_m(x) \\
     \int_a^b f(x)\ dx = \int_a^b Q_m(x)\ dx \\
     \varepsilon = \int_a^b R_m(x)\ dx
   \end{gather*}
-\end{commentblock}
 \begin{tcolorbox}
   \begin{equation}
     x_0 = a \Rightarrow I \approx (b - a)f(a)
@@ -296,6 +294,61 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
       \varepsilon_{\text{симп.}}  &= - \frac{(b-a)^5}{2880} f^{''''}(\eta^*)
     \end{align*}
   \end{importantblock}
+<<<<<<< HEAD
 
+=======
+  
+  \subsection{Погрешности составных формул}
+  Погрешность составной формулы равна сумме погрешностей, допущенных на отдельных участках. \\
+  \boxed {
+    \varepsilon_{\text{л.пр.}}^{\text{сост.}}:
+  }
+  \[[x_k, x_{k+1}] \rightarrow \frac{(x_{k+1} - x_k)^2}{2} f{'}(\eta_k^*) = \frac{(b-a)^2}{2N^2} f^{'}(\eta_k^*)\]
+  \begin{align*}
+    \varepsilon_{\text{л.пр.}}^{\text{сост.}} &= \sum_{k=0}^{N-1} \frac{(b-a)^2}{2N^2}f^{'}(\eta_k^*) \\
+                                              &= \frac{(b-a)^2}{2N} \times \frac{1}{N} \sum_{k=0}^{N-1} f^{'}(\eta_k^*) \settag{1**}\\
+                                              &= \frac{(b-a)^2}{2N} f^{'}(\eta^{**}) 
+  \end{align*}
+  \boxed {
+    \text{Аналогично:}
+  }
+  \begin{equation*}
+    \varepsilon_{\text{пр.пр.}}^{\text{сост.}} = - \frac{(b-a)^2}{2N} f^{'}(\eta^{**}) \settag{2**}
+  \end{equation*}
+  \boxed {
+    \varepsilon_{\text{трап.}}^{\text{сост.}}:
+  }
+  \[[x_k, x_{k+1}] \rightarrow - \frac{(x_{k+1} - x_k)^3}{12} f{''}(\eta_k^*) = - \frac{(b-a)^3}{12N^3} f^{''}(\eta_k^*)\]
+  \begin{align*}
+    \varepsilon_{\text{трап.}}^{\text{сост.}} = - \frac{(b-a)^3}{12N^2} \times \frac{1}{N} \sum_{k=0}^{N-1} f^{''}(\eta_k^*) = - \frac{(b-a)^3}{12N^2} f^{''}(\eta^{**}) \settag{3**}
+  \end{align*}
+  \boxed {
+    \text{Аналогично:}
+  }
+  \begin{equation*}
+    \varepsilon_{\text{ср.пр.}}^{\text{сост.}} = \frac{(b-a)^3}{24N^2} f^{''}(\eta^{**}) \settag{4**}
+  \end{equation*}
+  \boxed {
+    \varepsilon_{\text{симп.}}^{\text{сост.}}:
+  }
+  \[[x_k, x_{k+2}] \rightarrow - \frac{(x_{k+2} - x_k)^5}{2880} f{(4)}(\eta_k^*) = - \frac{(b-a)^5}{90N^5} f^{(4)}(\eta_k^*)\]
+  \begin{align*}
+    \varepsilon_{\text{симп.}}^{\text{сост.}} = - \frac{(b-a)^5}{180N^4} \times \frac{1}{N/2} \sum_{k=1}^{\frac{N}{2}} f^{(4)}(\eta_k^*) = - \frac{(b-a)^5}{180N^4} f^{(4)}(\eta^{**}) \settag{5**}
+  \end{align*}
+  Если продолжать увеличивать степень интерполяционного полинома, то погрешность составных формул имеет следующий вид:
+  \begin{importantblock}
+    \[\varepsilon = \alpha \frac{(b-a)^{S+1}}{N^S} f^{(S)}(\eta), \alpha = const\]
+  \end{importantblock}
+
+  \begin{mainblock}
+    На практике погрешность оценивается одним из следующих способов:
+    \begin{enumerate}
+      \item По формулам выше (используется крайне редко).
+      \item Наиболее популярный - вычисляют интеграл по какой-то квадратурной формуле для $N$ и $2N$, результаты сравнивают. Если погрешность велика, $N$ удваивается.
+      \item В тех случаях, когда увеличение $N$ невозможно, сравнивают две разные квадратурные формулы с одним $N$.
+    \end{enumerate}
+  \end{mainblock}
+    
+>>>>>>> 0799997f526ad46af8ffe8d07ead9913b00d84a1
 
 \end{document}
