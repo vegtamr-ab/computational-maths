@@ -1,5 +1,6 @@
 *.gz
 *.synctex.gz
+*.dvi
 *.fls
 *.log
 *.fdb_latexmk
