@@ -1,0 +1,74 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[most]{tcolorbox} % для управления цветом
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{14. Среднеквадратичная аппроксимация (непрерывный случай). Понятие ортогональности}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+Продолжение вопроса "13. Среднеквадратичная аппроксимация..."
+\section{Непрерывный случай}
+Функция задана непрервным образом на промежутке $[a,b]$.
+В среднеквадратичном критерии вместо суммы возникает определенный на промежутке интеграл
+\begin{gather*}
+  \rho^2 = \int_a^b p(x)\bigg( Q_m(x)-f(x) \bigg)^2 dx \rightarrow min
+\end{gather*}
+\begin{flushright}
+  \small
+  $x\in [a,b]$, $p(x) - \text{весовая функция}$, \\
+  $Q_m(x) = \sum_{k=0}^m a_k\varphi_k(x)$
+\end{flushright}
+Необходимое услвоие экстремума: $\frac{\partial \rho^2}{\partial a_k} = 0$, $k=0,1,2,\dots,m$. \\
+Система уравнений выглядит следующим образом: \\
+\begin{equation}
+  \begin{split}
+    a_0\int_a^b p(x)\varphi_0(x)\varphi_k(x)dx +\dots+ a_m\int_a^b p(x)\varphi_m(x)\varphi_k(x)dx = \\
+    = \int_a^b p(x)f(x)\varphi_k(x)dx
+  \end{split}
+  \label{eq:RmsEq}
+\end{equation}
+Решаем систему (\ref{eq:RmsEq}) и находим коэффициенты $a_k$. \\
+
+\section{Понятие ортогональности}
+Система резко упрощается, если функции ${\varphi_k(x)}$ ортогональные.
+Последовательность функций ${\varphi_k(x)}$ называется \textit{ортогональной} на промежутке $[a,b]$ с весом $p(x)$, если
+\begin{equation}
+ \bigg(\varphi_k(x), \varphi_i(x)\bigg) = \int_a^b p(x)\varphi_k(x)\varphi_i(x)dx =
+ \begin{cases}
+   0, & i \ne k, \\
+   A>0, & i=k
+ \end{cases}
+\end{equation}
+
+Если $A=1$, то функции называются \textit{ортонормированными}. В этом случае все, кроме одного, интегралы в левой части
+(\ref{eq:RmsEq}) обращаются в 0 и для $a_k$ получается готовое выражение:
+\begin{equation*}
+  a_k = \frac{\int_a^b p(x)f(x)\varphi_k(x)dx}{\int_a^b p(x)\varphi_k^2(x)dx}
+\end{equation*}
+Если функции еще и \textit{нормированные}, то знаменатель равен 0.
+
+\end{document}
