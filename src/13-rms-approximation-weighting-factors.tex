@@ -1,0 +1,142 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[most]{tcolorbox} % для управления цветом
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{13. Среднеквадратичная аппроксимация (дискретный случай). Понятие веса}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Поставнова задачи}
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis} [
+      xlabel = {}, ylabel = {},
+      xmin = 0, ymin = 0,
+      xtick = {}, ytick = {},
+      no markers
+      ]
+      \addplot [
+      color = blue,
+      thick,
+      domain = 0:4,
+      samples = 300,
+      only marks
+      ] coordinates { (0,0)(0.25,1)(0.5,2.5)(0.6,2.5)(1,3.8)(1.1,3.7)(1.2,4.4)(1.4,4.3)(1.45,4.6)(1.6,4.5)(1.8,4.9)(2,7) };
+      \addplot [
+      color = red,
+      ultra thick,
+      domain = 0:4,
+      samples = 300,
+      ] coordinates { (0,0)(0.25,1)(0.5,2.5)(0.6,2.5)(1,3.8)(1.1,3.7)(1.2,4.4)(1.4,4.3)(1.45,4.6)(1.6,4.5)(1.8,4.9) };
+      \addplot [
+      color = green,
+      ultra thick,
+      domain = 0:4,
+      samples = 300,
+      smooth
+      ] coordinates { (0,0)(0.25,1.1)(0.5,2.1)(1,3.7)(1.2,4.2)(1.4,4.5)(1.6,4.7)(1.8,4.9) };
+
+      \addlegendentry{data}
+      \addlegendentry{$f_1(x)$}
+      \addlegendentry{$f_2(x)$}
+    \end{axis}
+
+  \end{tikzpicture}
+\end{center}
+
+Маловероятно, что кривая $f_1(x)$, получившаяся в результате \\ интерполирования по эксперементальных данным (точки на рисунке),
+имеет вид исходной зависимости. Скорее вид кривой $f_2(x)$ отвечает этой зависимости, а отклонение экспериментальных данных
+обусловлено сравнительно большой погрешностью измерений. В таком случае или, если аппроксимируемая функция задана
+на промежутке $[a, b]$ непрерывно, используют $\textit{среднеквадратичный критерий}$.\\
+
+\textit{Задача} среднеквадратичной аппроксимации (или "метода наименьших квадратов"): так подобрать аппроксимирующую функцию $Q(x)$
+\begin{itemize}
+  \item чтобы квадрат расстояния между $Q(x)$ и $f(x)$ был минимальным
+    \begin{equation*}
+      \rho^2 = \parallel Q(x)-f(x) \parallel ^2 = (Q(x)-f(x), Q(x)-f(x)) \rightarrow min
+    \end{equation*}
+    \begin{center}
+      \small{Линейное пространство со скалярным произведением}
+    \end{center}
+  \item $Q(x)$ выбирается в виде обобщенного многочлена:
+    \begin{equation}
+      Q_m(x) = a_0\varphi_0(x) + a_1\varphi_1(x) +\dots+ a_m\varphi_m(x) = \sum_{k=0}^{m}a_k\varphi_k(x)
+    \end{equation}
+    \begin{center}
+      \small{{$\varphi_k$} - заданный набор линейно независимых функций, \\
+      коэффициенты $a_k$ подлежат определению}
+    \end{center}
+\end{itemize}
+
+\section{Дискретный случай}
+Коэффициенты $a_k$ выбираются из условия минимума $\rho^2$
+\begin{equation}
+  \rho^2 = (Q(x)-f(x), Q(x)-f(x)) = \sum_{i=1}^{N}(Q_m(x_i)-f(x_i))^2 \rightarrow min.
+\end{equation}
+Три варианта соотношения чисел $N$ и $m$:
+\begin{enumerate}
+  \item $N=m+1$. Число коэффициентов $a_k$ равно числу точек таблицы, через которые проходит интерполяционный полином,
+    являющийся \textit{единственным решением}; $\rho_{min}^2=0$.
+  \item $N<m+1$. Задача имеет \textit{бесконечное множество решений}, при этом $\rho_{min}^2=0$.
+  \item $N>m+1$. Задачав имеет \textit{единственное решение}, но $\rho_{min}^2 \ne 0$. \\
+    Это типичный случай среднеквадратичной аппроксимации, \\ на практике $N \gg m+1$.
+\end{enumerate}
+Необходимое условие экстремума:
+\begin{align*}
+  \frac{\partial \rho^2}{\partial a_k} & = 0, & k=0,1,2,\dots,m.
+\end{align*}
+Дифференцируем (2)
+\begin{gather*}
+  0 = \frac{\partial \rho^2}{\partial a_k} = 2 \sum_{i=1}^{N}(Q_m(x_i)-f(x_i))\varphi_k(x_i) \\
+  \small{\sum_{i=1}^NQ_m(x_i)\varphi_k{x_i} = \sum_{i=1}^Nf(x_i)\varphi_k(x_i),}
+  \hspace{10pt}
+  \small{\text{при этом } Q_m(x_i) = \sum_{j=0}^m a_j\varphi_j(x_i)}
+\end{gather*}
+\begin{importantblock}
+  \begin{gather*}
+    \Rightarrow
+    a_0\sum_{i=1}^N\varphi_0(x_i)\varphi_k(x_i) + a_1\sum_{i=1}^N\varphi_1(x_i)\varphi_k(x_i)
+    +\dots+ \\ +a_m\sum_{i=1}^N\varphi_m(x_i)\varphi_k(x_i) = \sum_{i=1}^N f(x_i)\varphi_k(x_i) \\
+    k = 0,1,\dots,m.
+  \end{gather*}
+\end{importantblock}
+Решаем систему уравнений и находим коэффициенты $a_k$.
+
+\newpage
+\section{Понятие веса}
+На практике возникает ситуация, когда различным экспериментальным точкам доверяют в разной степени,
+это можно учесть введением весовых коэффициентов
+\begin{equation}
+  \rho^2 = \sum_{i=1}^N \underbrace{p_i}_{p_i\footnotesize{>0}}\bigg(Q_m(x_i)-f(x_i)\bigg)^2 \rightarrow min.
+\end{equation}
+
+Для тех точек, которым мы доверяем больше и к которым \\ аппроксимирующую функцию хотим провести ближе,
+весовые коэффициенты нужно выбирать больше.
+Обращаясь к практике, положительные весовые коэффициенты $p_i$ часто задают так, чтобы их сумма была равна, например, $1$ или $100$.
+Важным является отношение $p_i$ друг к другу.
+
+\end{document}
