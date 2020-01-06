@@ -15,6 +15,7 @@
 \definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
 \newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
 boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
 \definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
 \newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
 boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
@@ -294,7 +295,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
       \varepsilon_{\text{симп.}}  &= - \frac{(b-a)^5}{2880} f^{''''}(\eta^*)
     \end{align*}
   \end{importantblock}
-  
+
   \subsection{Погрешности составных формул}
   Погрешность составной формулы равна сумме погрешностей, допущенных на отдельных участках. \\
   \boxed {
@@ -304,7 +305,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
   \begin{align*}
     \varepsilon_{\text{л.пр.}}^{\text{сост.}} &= \sum_{k=0}^{N-1} \frac{(b-a)^2}{2N^2}f^{'}(\eta_k^*) \\
                                               &= \frac{(b-a)^2}{2N} \times \frac{1}{N} \sum_{k=0}^{N-1} f^{'}(\eta_k^*) \settag{1**}\\
-                                              &= \frac{(b-a)^2}{2N} f^{'}(\eta^{**}) 
+                                              &= \frac{(b-a)^2}{2N} f^{'}(\eta^{**})
   \end{align*}
   \boxed {
     \text{Аналогично:}
