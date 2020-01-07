@@ -1,0 +1,119 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{18. Решение систем линейных дифференциальных и разностных уравнений с постоянной матрицей.}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Системы линейных дифференциальных уравнений}
+\begin{importantblock}
+  \begin{equation}
+    \frac{dx}{dt} = Ax + f(t),\, x(0) = x_0)
+    \label{eq:LDLESys}
+  \end{equation}
+  $A$ - заданная постоянная квадратная матрица, \\
+  $f(t)$ - заданная вектор-функция, \\
+  $f(x)$ - вектор-решение.
+\end{importantblock}
+Начинаем решать с однородной системы:
+\begin{equation}
+  \frac{dx}{dt} = Ax
+  \label{eq:LDLEHomo}
+\end{equation}
+\marginpar {
+  \begin{gather*}
+    \footnotesize x^{'} = \alpha x \\
+    \Rightarrow x(t) = e^{\alpha t} \times C
+  \end{gather*}
+}
+\begin{equation}
+  \underbrace{x(t)}_{\text{вектор}} = \underbrace{e^{At}}_{\text{матрица}} \times \underbrace{C}_{\text{вектор}}
+  \label{eq:LDLEHomoSol}
+\end{equation}
+Подставляем уравнение (\ref{eq:LDLEHomoSol}) в уравнение (\ref{eq:LDLEHomo}):
+\[Ae^{At}\times C = Ae^{At}\times C\]
+Решение неоднородной системы (\ref{eq:LDLESys}) в соответствии с методом Лагранжа будем искать в виде:
+\begin{equation}
+  x(t) = e^{At} \times C(t)
+  \label{eq:LDLESol}
+\end{equation}
+Подставляем уравнение (\ref{eq:LDLESol}) в уравнение (\ref{eq:LDLESys}):
+\[\underline{Ae^{At}\times C(t)} + e^{At}\frac{dC(t)}{dt} = \underline{Ae^{At}\times C(t)} + f(t)\]
+Умножим на обратную матрицу слева:
+\[\frac{dC(t)}{dt} = e^{-At}f(t)\]
+\begin{equation}
+  C(t) = C(0) + \int_0^t e^{-A\tau}f(\tau)\, d\tau
+  \label{eq:LDLECt}
+\end{equation}
+Подставляем уравнение (\ref{eq:LDLECt}) в уравнение (\ref{eq:LDLESol}):
+\[x(t) = e^{At}C(0) + e^{At}\int_0^t e^{-A\tau}f(\tau)\,d\tau = e^{At}C(0)+\int_0^t e^{A(t-\tau)}f(\tau)\,d\tau\]
+Полагаем, что $t = 0$:
+\[x(0) = E\times C(0) + \underbrace{\int_0^0}_{0} \Rightarrow C(0) = x_0\]
+\begin{equation}
+  x(t) = e^{At} \times x_0 + \int_0^t e^{A(t-\tau)}f(\tau)\,d\tau
+  \label{eq:LDLEExact}
+\end{equation}
+Формула (\ref{eq:LDLEExact}) - точное решение системы (\ref{eq:LDLESys}).
+
+\section{Системы линейных разностных уравнений}
+\setcounter{equation}{0}
+\begin{importantblock}
+  \begin{equation}
+    x_{n+1} = Bx_n + \varphi(n),\, x_n |_{n=0} = x_0
+    \label{eq:LDESys}
+  \end{equation}
+  $B$ - заданная постоянная квадратная матрица, \\
+  $\varphi(n)$ - заданная вектор-функция, \\
+  $x_n$ - вектор-решение.
+\end{importantblock}
+\begin{align*}
+  x_1 &= Bx_0 + \varphi_0 \\
+  x_2 &= Bx_1 + \varphi_1 = B^2x_0 + B\varphi_0 + \varphi_1 \\
+  x_3 &= Bx_2 + \varphi_2\dots \\
+  & \text{по индукции:} \\
+  x_n &= B^nx_0 + \sum_{k=0}^{n-1} B^k\varphi_{n-1-k} \settag{2}
+\end{align*}
+Рассмотрим важный частный случай, когда \(\varphi(n) = \alpha - const\):
+\[x_n = B^nx_0 + (\sum_{k=0}^{n-1} B^k) \times \alpha\]
+\marginpar {
+  \footnotesize (*) на осн. теор. 4 о МФ возм. оба варианта.
+}
+\begin{equation*}
+  \sum_{k=0}^{n-1} B^k \, \footnote{$\sum_{k=0}^{n-1} B^k = \frac{1-B^n}{1-B}$}
+  \begin{array}{c}
+    \nearrow (E-B^n)(E-B)^{-1}\\
+    \searrow (E-B)^{-1}(E-B^n)
+  \end{array}^{(*)}
+\end{equation*}
+\begin{equation*}
+  x_n = B^nx_0 + (\sum_{k=0}^{n-1} B^k) \times \alpha = B^nx_0 + (E-B^n)(E-B)^{-1}\alpha \settag{2*}
+\end{equation*}
+\end{document}
