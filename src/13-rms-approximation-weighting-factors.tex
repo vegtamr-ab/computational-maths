@@ -96,6 +96,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 Коэффициенты $a_k$ выбираются из условия минимума $\rho^2$
 \begin{equation}
   \rho^2 = (Q(x)-f(x), Q(x)-f(x)) = \sum_{i=1}^{N}(Q_m(x_i)-f(x_i))^2 \rightarrow min.
+  \label{eq:RMScond}
 \end{equation}
 Три варианта соотношения чисел $N$ и $m$:
 \begin{enumerate}
@@ -109,7 +110,10 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 \begin{align*}
   \frac{\partial \rho^2}{\partial a_k} & = 0, & k=0,1,2,\dots,m.
 \end{align*}
-Дифференцируем (2)
+\begin{center}
+  \small{Система из $m+1$ уравнения с $m+1$ неизвестными}
+\end{center}
+Дифференцируем (\ref{eq:RMScond}):
 \begin{gather*}
   0 = \frac{\partial \rho^2}{\partial a_k} = 2 \sum_{i=1}^{N}(Q_m(x_i)-f(x_i))\varphi_k(x_i) \\
   \small{\sum_{i=1}^NQ_m(x_i)\varphi_k{x_i} = \sum_{i=1}^Nf(x_i)\varphi_k(x_i),}
