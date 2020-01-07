@@ -38,14 +38,17 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 Так называются формулы для вычисления определённых интегралов.
 \begin{gather*}
   I = \int_a^b f(x)\ dx \\
+  \text{дан интеграл, точное значение которого получить крайне сложно,} \\
+  f(x) = Q_m(x) + R_m(x) \\
+  \int_a^b f(x)\ dx = \int_a^b Q_m(x)\ dx \\
+  \text{некоторая квадратурная формула,} \\
+  \varepsilon = \int_a^b R_m(x)\ dx \hspace{10pt} \text{- ее погрешность.}
+\end{gather*}
+Полином 0-й степени:
+\begin{gather*}
   Q_0(x) = f(x_0) \\
   I \approx \int_a^b f(x_0)\ dx = (b - a)f(x_0)
 \end{gather*}
-  \begin{gather*}
-    f(x) = Q_m(x) + R_m(x) \\
-    \int_a^b f(x)\ dx = \int_a^b Q_m(x)\ dx \\
-    \varepsilon = \int_a^b R_m(x)\ dx
-  \end{gather*}
 \begin{tcolorbox}
   \begin{equation}
     x_0 = a \Rightarrow I \approx (b - a)f(a)
@@ -76,7 +79,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 
       \end{axis}
     \end{tikzpicture} \\
-    Квадратурная формула левых прямоугольников.
+    Квадратурная формула \textbf{левых прямоугольников}.
   \end{center}
 \end{tcolorbox}
 
@@ -110,7 +113,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 
       \end{axis}
     \end{tikzpicture} \\
-    Квадратурная формула правых прямоугольников.
+    Квадратурная формула \textbf{правых прямоугольников}.
   \end{center}
 \end{tcolorbox}
 
@@ -144,12 +147,14 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 
       \end{axis}
     \end{tikzpicture} \\
-    Квадратурная формула средних прямоугольников.
+    Квадратурная формула \textbf{средних прямоугольников}.
   \end{center}
 \end{tcolorbox}
 
 \begin{tcolorbox}
-  \[Q_1(x) = \frac{x-b}{a-b}f(a)+\frac{x-a}{b-a}f(b)\]
+  \begin{gather*}
+    Q_1(x) = \frac{x-b}{a-b}f(a)+\frac{x-a}{b-a}f(b) \text{ - полином 1-й степени}.
+  \end{gather*}
   \begin{equation}
     I \approx \int_a^b Q_1(x)\ dx = \frac{b-a}{2}(f(a) + f(b))
     \label{eq:QRT}
@@ -179,14 +184,14 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 
       \end{axis}
     \end{tikzpicture} \\
-    Квадратурная формула трапеций.
+    Квадратурная формула \textbf{трапеций}.
   \end{center}
 \end{tcolorbox}
 
 \begin{tcolorbox}
-  \[Q_2(x); x_0 = a, x_1 = \frac{a+b}{2}, x_2 = b\]
+  \[Q_2(x) \hspace{15pt} x_0 = a, x_1 = \frac{a+b}{2}, x_2 = b\]
   \begin{equation}
-    I \approx \int_a^b Q_2(x)\ dx = \frac{b-a}{6}(f(a) + 4f(\frac{a+b}{2}) + f(b))
+    I \approx \int_a^b Q_2(x)\ dx = \frac{b-a}{6}\bigg(f(a) + 4f(\frac{a+b}{2}) + f(b)\bigg)
     \label{eq:QRS}
   \end{equation}
   \begin{center}
@@ -214,32 +219,33 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 
       \end{axis}
     \end{tikzpicture} \\
-    Метод параболы или квадратурная формула Симпсона.
+    Метод параболы \textit{или} квадратурная формула \textbf{Симпсона}.
   \end{center}
 \end{tcolorbox}
 Для повышения точности исходный промежуток разбивается на участки, на каждом из них применяется какая-то квадратурная формула, а результаты складываются.
-Эти квадратурные формулы получили название
+Эти квадратурные формулы получили название составные квадратурные формулы.
 
 \section{Составные квадратурные формулы}
-Разобьём исходный промежуток на $m$ участков одинаковой длины: \\
-\([x_0, x_1], [x_1, x_2], \dots, [x_k, x_{k+1}], \dots, [x_{N-1}, x_N]*\)
 \marginpar
 {
-  \footnotesize (*)
+  \vspace{10mm}
+  \footnotesize
   \begin{gather*}
     \footnotesize x_k = x_0 + k\frac{b-a}{N} \\
     x_0 = a, x_N = b \\
     x_{k+1} - x_k = \frac{b-a}{N}
   \end{gather*}
 }
-На каждом участке вычисляем интеграл:
+Разобьём исходный промежуток на $N$ участков одинаковой длины: \\
+\([x_0, x_1], [x_1, x_2], \dots, [x_k, x_{k+1}], \dots, [x_{N-1}, x_N]\).
+На каждом участке \\ вычисляем интеграл:
 \[I_k = \int_{x_k}^{x_{k+1}} f(x)\ dx \approx \frac{b-a}{N}f(x_k)\]
 \begin{importantblock}
   \[I = \int_a^b f(x)\ dx\]
   \begin{align*}
     \stepcounter{equation}
-    I & \approx \frac{b-a}{N} \sum_{k=0}^{N-1} f(x_k) \settag{1*} \\
-    I & \approx \frac{b-a}{N} \sum_{k=1}^{N} f(x_k) \settag{2*} \\
+    I & \approx \frac{b-a}{N} \sum_{\underline{k=0}}^{N-1} f(x_k) \settag{1*} \\
+    I & \approx \frac{b-a}{N} \sum_{\underline{k=1}}^{N} f(x_k) \settag{2*} \\
     I & \approx \frac{b-a}{N} \sum_{k=0}^{N-1} f(x_k + \frac{b-a}{2N}) \settag{3*}
   \end{align*}
 \end{importantblock}
@@ -247,23 +253,33 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 \begin{importantblock}
   \begin{align*}
     \stepcounter{equation}
-    I & \approx \frac{b-a}{2N} \sum_{k=1}^{N-1} f(x_k) \settag{4*}
+    I & \approx \frac{b-a}{2N} \bigg( f(a) + \sum_{k=1}^{N-1} f(x_k) + f(b) \bigg) \settag{4*}
   \end{align*}
 \end{importantblock}
-В формуле Симпсона выберем $N$ чётных. Количество промежутков будет $N/2$, каждый промежуток будет вдвое большей длины.
-\[I_k = \int_{x_k}^{x_{k+2}} f(x)\ dx \approx \frac{b-a}{3N}(f(x_k) + 4f(x_{k+1}) + f(x_{k+2}))\]
+В формуле Симпсона выберем $N$ чётным, количество промежутков будет $N^*=N/2$, каждый промежуток будет вдвое большей длины, чем в предыдущих формулах.
+\marginpar
+{
+  \vspace{3mm}
+  \footnotesize \[[x_k, x_{k+2}] = \frac{2(b-a)}{N}\]
+}
+\[I_k = \int_{x_k}^{\underline{x_{k+2}}} f(x)\ dx \approx \frac{b-a}{3N}\bigg(f(x_k) + 4f(x_{k+1}) + f(x_{k+2})\bigg)\] \\
+\begin{flushright}
+  \footnotesize
+  \[I = \sum_{k=0}^{N^*-2} I_k\]
+  Итерация суммы происходит по вдвое большим промежуткам, \\ поэтому от $x_0$ мы перейдем сразу к $x_2$
+\end{flushright}
 \begin{importantblock}
   \begin{align*}
     \stepcounter{equation}
-    I & \approx \frac{b-a}{3N}(f(a) + 4(f_1 + f_3 + \dots + f_{N-1}) \\
-      & + 2(f_2 + f_4 + \dots + f_{N-2}) + f(b)) \settag{5*}
+    I & \approx \frac{b-a}{3N}\bigg(f(a) + 4(f_1 + f_3 + \dots + f_{N-1}) \\
+      & + 2(f_2 + f_4 + \dots + f_{N-2}) + f(b)\bigg) \settag{5*}
   \end{align*}
 \end{importantblock}
 
 \section{Погрешности квадратурных формул}
 Теорема о 'средней' точке:
 \[\int_a^b f(x)g(x)\ dx = g(c) \int_a^b f(x)\ dx, c \in [a, b]\]
-Чтобы теорема работала, функция, стоящая под знаком интеграла, должна быть знакопостоянна.
+Чтобы теорема работала, функция, стоящая под знаком интеграла, должна быть \textit{знакопостоянна}.
 Теорема о 'средней' точке-2:
 \[\frac{1}{N}\sum_{k=1}{N}f(x_k) = f(\eta)\]
 
@@ -271,15 +287,22 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
   \[\varepsilon = \int_a^b R_m(x)\ dx\]
   Погрешность равна интегралу от остаточного члена интерполяционного полинома.
   \[R_0(x) = \frac{x-a}{1!}f^{'}(\eta)\]
+  \marginpar
+  {
+    \vspace{3mm}
+    \footnotesize
+    \[\eta  \rightarrow \eta(x)\]
+  }
   \begin{align*}
     \varepsilon_{\text{л.пр.}}  &= \int_a^b \frac{x-a}{1!} f^{'}(\eta)\ dx = \int_a^b (x-a)\ dx\ f^{'}(\eta^*) = \frac{(b-a)^2}{2}f^{'}(\eta^*) \\
     \varepsilon_{\text{пр.пр.}} &= \int_a^b \frac{x-b}{1!} f^{'}(\eta)\ dx = - \frac{(b-a)^2}{2}f^{'}(\eta^*) \\
-    \varepsilon_{\text{трап.}}  &= \int_a^b \frac{(x-a)(x-b)}{2!} f^{''}(\eta)\ dx = - \frac{(b-a)^2}{12}f^{''}(\eta^*)
+    \varepsilon_{\text{трап.}}  &= \int_a^b \frac{(x-a)(x-b)}{2!} f^{''}(\eta)\ dx = - \frac{(b-a)^3}{12}f^{''}(\eta^*)
   \end{align*}
+  \newpage
   \[\varepsilon_{\text{ср.пр.}} = \int_a^b \frac{x-\frac{a+b}{2}}{1!} f^{'}(\eta)\ dx\]
   Теорема о 'среднем' здесь не работает, используется другой способ.
   Рассмотрим разложение функции в степенной ряд Тейлора до $^2$  в точке $\frac{a+b}{2}$:
-  \[f(x) = f(\frac{a+b}{2}) + \frac{x-\frac{a+b}{2}}{1!} f^{'}(\frac{a+b}{2}) + \frac{(x-\frac{a+b}{2})}{2!} f^{''}(\eta)\]
+  \[f(x) = f(\frac{a+b}{2}) + \frac{x-\frac{a+b}{2}}{1!} f^{'}(\frac{a+b}{2}) + \frac{(x-\frac{a+b}{2})^2}{2!} f^{''}(\eta)\]
   Проинтегрируем слева и справа на $[a; b]$:
   \[\int_a^b f(x)\ dx = (b-a)f(\frac{a+b}{2}) + \textbf{0} + \underbrace{\int_a^b \frac{(x-\frac{a+b}{2})^2}{2!} f^{''}(\eta)\ dx}_{\varepsilon_{\text{ср.пр.}}}\]
   \[\varepsilon_{\text{ср.пр.}} = \int_a^b \frac{(x-\frac{a+b}{2})^2}{2!} f^{''}(\eta)\ dx = \frac{(b-a)^3}{24}f^{''}(\eta^*)\]
@@ -290,7 +313,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
     \begin{align*}
       \varepsilon_{\text{л.пр.}}  &= \frac{(b-a)^2}{2}f^{'}(\eta^*) \\
       \varepsilon_{\text{пр.пр.}} &= - \frac{(b-a)^2}{2}f^{'}(\eta^*) \\
-      \varepsilon_{\text{трап.}}  &= - \frac{(b-a)^2}{12}f^{''}(\eta^*) \\
+      \varepsilon_{\text{трап.}}  &= - \frac{(b-a)^3}{12}f^{''}(\eta^*) \\
       \varepsilon_{\text{ср.пр.}} &= \frac{(b-a)^3}{24}f^{''}(\eta^*) \\
       \varepsilon_{\text{симп.}}  &= - \frac{(b-a)^5}{2880} f^{''''}(\eta^*)
     \end{align*}
@@ -303,8 +326,8 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
   }
   \[[x_k, x_{k+1}] \rightarrow \frac{(x_{k+1} - x_k)^2}{2} f{'}(\eta_k^*) = \frac{(b-a)^2}{2N^2} f^{'}(\eta_k^*)\]
   \begin{align*}
-    \varepsilon_{\text{л.пр.}}^{\text{сост.}} &= \sum_{k=0}^{N-1} \frac{(b-a)^2}{2N^2}f^{'}(\eta_k^*) \\
-                                              &= \frac{(b-a)^2}{2N} \times \frac{1}{N} \sum_{k=0}^{N-1} f^{'}(\eta_k^*) \settag{1**}\\
+    \varepsilon_{\text{л.пр.}}^{\text{сост.}} &= \sum_{k=0}^{N-1} \frac{(b-a)^2}{2N^2}f^{'}(\eta_k^*) =\\
+                                              &= \frac{(b-a)^2}{2N} \times \frac{1}{N} \sum_{k=0}^{N-1} f^{'}(\eta_k^*) \settag{1**} = \\
                                               &= \frac{(b-a)^2}{2N} f^{'}(\eta^{**})
   \end{align*}
   \boxed {
@@ -318,18 +341,18 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
   }
   \[[x_k, x_{k+1}] \rightarrow - \frac{(x_{k+1} - x_k)^3}{12} f{''}(\eta_k^*) = - \frac{(b-a)^3}{12N^3} f^{''}(\eta_k^*)\]
   \begin{align*}
-    \varepsilon_{\text{трап.}}^{\text{сост.}} = - \frac{(b-a)^3}{12N^2} \times \frac{1}{N} \sum_{k=0}^{N-1} f^{''}(\eta_k^*) = - \frac{(b-a)^3}{12N^2} f^{''}(\eta^{**}) \settag{3**}
+    \varepsilon_{\text{трап.}}^{\text{сост.}} = - \frac{(b-a)^3}{12N^2} \times \frac{1}{N} \sum_{k=0}^{N-1} f^{''}(\eta_k^*) = - \frac{(b-a)^3}{12N^2} f^{''}(\eta^{**}) \settag{4**}
   \end{align*}
   \boxed {
     \text{Аналогично:}
   }
   \begin{equation*}
-    \varepsilon_{\text{ср.пр.}}^{\text{сост.}} = \frac{(b-a)^3}{24N^2} f^{''}(\eta^{**}) \settag{4**}
+    \varepsilon_{\text{ср.пр.}}^{\text{сост.}} = \frac{(b-a)^3}{24N^2} f^{''}(\eta^{**}) \settag{3**}
   \end{equation*}
   \boxed {
     \varepsilon_{\text{симп.}}^{\text{сост.}}:
   }
-  \[[x_k, x_{k+2}] \rightarrow - \frac{(x_{k+2} - x_k)^5}{2880} f{(4)}(\eta_k^*) = - \frac{(b-a)^5}{90N^5} f^{(4)}(\eta_k^*)\]
+  \[[x_k, \underline{x_{k+2}}] \rightarrow - \frac{(x_{k+2} - x_k)^5}{2880} f^{(4)}(\eta_k^*) = - \frac{(b-a)^5}{90N^5} f^{(4)}(\eta_k^*)\]
   \begin{align*}
     \varepsilon_{\text{симп.}}^{\text{сост.}} = - \frac{(b-a)^5}{180N^4} \times \frac{1}{N/2} \sum_{k=1}^{\frac{N}{2}} f^{(4)}(\eta_k^*) = - \frac{(b-a)^5}{180N^4} f^{(4)}(\eta^{**}) \settag{5**}
   \end{align*}
