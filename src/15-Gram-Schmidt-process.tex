@@ -1,0 +1,118 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[most]{tcolorbox} % для управления цветом
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{15. Ортогонализация по Шмидту. Примеры ортогональных полиномов}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+Перейти от линейно независмой функции к ортогональной позволяет метод ортогонализации Грама-Шмидта.
+\section{Метод Ортогонализации Грамма-Шмидта}
+\begin{align*}
+  \varphi_0(x), \varphi_1(x), \dots, \varphi_m(x) && [a,b], p(x)>0
+\end{align*}
+Требуется построить новый набор функций $g(x)$, удовлетворяющий следующим условиям:
+\begin{itemize}
+  \item функции ортогональны на промежутке $[a,b]$ с весом $p(x)$,
+  \item функции являются линейной комбинацией $\varphi_k(x)$.
+\end{itemize}
+\vspace{5mm}
+$\widetilde{g_k}$ - функция ортогональная, но не нормированная. \\
+$g_k(x)$ строится так, чтобы она была ортогональна всем функциям $g_i(x)$, \textit{построенным до нее}.
+\begin{gather*}
+  \widetilde{g_0(x)} = \varphi_0(x) \\
+  \int_a^b \underbrace{p(x)}_{>0}\underbrace{\widetilde{g_0(x)^2}}_{>0}dx = \alpha_0^2 \\
+  \textit{нормируем} \Rightarrow g_0(x) = \frac{\widetilde{g_0(x)}}{\alpha_0} \hspace{5pt}\text{и дальше по индукции}
+\end{gather*}
+\begin{importantblock}
+  \begin{equation*}
+    \widetilde{g_m(x)} = \varphi_m(x) - \sum_{k=0}^{m-1}C_{m,k} \cdot g_k(x) \hspace{10pt} \bigg| g_i(x), p(x), \int_a^b
+  \end{equation*}
+  \begin{flushright}
+    \footnotesize
+    $C_{m,k}$ - коэффициенты, подлежащие определению, \\
+    $g_k(x)$ - функции, построенные до $\widetilde{g_m(x)}$ \\
+    $[i=0,1,\dots,m-1]$
+  \end{flushright}
+  \begin{align*}
+    0 =  \int_a^b p(x)\widetilde{g_m(x)}g_i(x)dx &= \int_a^b p(x)\varphi_m(x)g_i(x)dx -\\
+    &- C_{m,i} \cdot \int_a^b p(x)g_i^2(x)dx \\
+  \end{align*}
+  \begin{gather*}
+    C_{m,i} = \frac{\int_a^b p(x)\varphi_m(x)g_i(x) \cdot dx}{\underbrace{\int_a^b p(x)g_i^2(x)dx}_{=1\text{, т.к. $g_i(x)$ нормированы}}} \\
+    \int_a^b p(x)g_m^2(x)dx = \alpha_m^2 \\
+    g_m(x) = \frac{\widetilde{g_m(x)}}{\alpha_m} \textit{ - нормируем}.
+  \end{gather*}
+\end{importantblock}
+
+\section{Примеры ортогональных полиномов}
+Различные семейства ортогональных полиномов главным образом отличаются друг от друга весовой функцией $p(x)$.
+\begin{mainblock}
+  Ортогональные полиномы строят для стандартного промежутка (чаще всего $[-1, 1], [0, 1]$), а затем при необходимости
+  переходят к произвольному промежутку $[a,b]$ при помощи замены переменных:
+  \begin{gather*}
+    \boxed{x = \frac{a+b}{2}+\frac{b-a}{2} \cdot t} \\
+    t \in [-1,1], x \in [a,b].
+  \end{gather*}
+\end{mainblock}
+
+\subsection{Ортогональные полиномы Лежандра}
+\begin{center}
+  $[-1, 1]$, \hspace{5pt} $p(x) \equiv 1$
+\end{center}
+\begin{gather*}
+  \boxed{L_n(x) = \frac{(-1)^n}{n!2^n} \cdot \frac{d^n}{dx^n}\bigg[(1-x^2)^n\bigg]} \\
+  L_0(x)=1, L_1(x)=x, L_2(x)=\frac{3x^2-1}{2} \\
+  \text{$L_n(x)$ ортогональны, но не нормированы}.
+\end{gather*}
+Для полиномов Лежандра имеет место следующее рекурентное соотношение:
+\begin{equation*}
+  (n+1)L_{n+1}(x)-(2n+1)xL_n(x)+nL{n-1}(x)=0.
+\end{equation*}
+Нули полиномов Лежандра являются нулями (узлами) квадратурных формул Гаусса.
+
+\subsection{Ортогональные полиномы Чебышёва}
+\begin{equation*}
+  [-1, 1], \hspace{5pt} p(x) = \frac{1}{\sqrt{1-x^2}}
+\end{equation*}
+\begin{gather*}
+  \boxed{T_n(x) = cos(n \cdot arccos(x))} \\
+  T_0(x) = 1, T_1(x) = 1, T_2(x) = 2x^2-1.
+\end{gather*}
+Получим рекурентное соотношение для полиномов Чебышёва:
+\begin{gather*}
+  \varphi = arccos(x) \\
+  cos((n+1)\varphi) + cos((n-1)\varphi = 2cos\varphi \cdot cos(n\varphi) \\
+  T_{n+1}(x) + T_{n-1}(x) = 2xT_n(x) \\
+  T_{n+1}(x) = 2xT_n(x) - T_{n-1}(x)
+\end{gather*}
+
+\end{document}
