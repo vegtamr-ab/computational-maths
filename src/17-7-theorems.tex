@@ -1,0 +1,185 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amssymb,amsmath,amsthm,amsfonts}
+\usepackage{pgfplots}
+\usepackage[most]{tcolorbox} % для управления цветом
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\theoremstyle{definition}
+\newtheorem{definition}{Определение}
+\newtheorem{theorem}{Теорема}
+\newtheorem{consequence}{Следствие}
+
+\theoremstyle{remark}
+\newtheorem*{evidence}{Доказательство}
+
+\title{17. 7 теорем о матричных функциях}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\begin{definition}
+  Матрицы $A$ и $B$ называются подобными, если найдется такая неособенная матрица $S$ ($det(S)\ne 0$), что
+  $B=SAS^{-1}$.
+\end{definition}
+\begin{theorem}
+  Подобные матрицы имеют одинаковые собственные значения.
+\end{theorem}
+\begin{evidence}
+  \begin{gather*}
+    det(B=\lambda E) = \\
+    = det(SAS^{-1}-\lambda SS^{-1}) = det(S(A-\lambda E)S^{-1}) = det(S) det(A-\lambda E)det(S^{-1}) = \\
+    = det(A-\lambda E).
+  \end{gather*}
+  Характеристические полиномы для обоих матриц совпали, следовательно, совпали и собственные значения.     \qed
+\end{evidence}
+\begin{theorem}
+  Если матрицы $A$ и $B$ подобны, то матричные функции от них тоже подобны, то есть если $B=SAS^{-1}$, то $f(B)=Sf(A)S^{-1}$.
+\end{theorem}
+\begin{evidence}
+  \begin{gather*}
+    f(B) = \sum_{k=0}^{\infty}\lambda_kB^k \boxed{=} \\
+    B^k = SA\underbrace{S^{-1}S}_{E}AS^{-1} \dots SAS^{-1} = SA^kS^{-1} \\
+    \boxed{=} \sum_{k=0}^{\infty}\lambda_kSA^kS = S\bigg(\sum_{k=0}^{infty}\alpha_kA^k\bigg)S^{-1} = \sum_{k=0}^{\infty}\alpha_kA^k.     \qed %символ Халмоша
+  \end{gather*}
+\end{evidence}
+\begin{theorem}
+  Если собственные значения матрицы $A$ различны, то она подобна диагональной матрице, на диагонали которой стоят собственные значения матрицы $A$.
+\end{theorem}
+\begin{evidence}
+  \begin{gather*}
+    A \rightarrow \lambda_k (\text{собственные значения}), u_k (\text{собственные векторы}), \\
+    Au_k = \lambda_lu_k, \\
+    U = (u_1, u_2,\dots, u_n) - \text{матрица, столбцами которой являются все собственные векторы}; \\
+    AU = (\lambda_1u_1, \lambda_2u_2, \dots, \lambda_nu_n) = U\varLambda, \\
+    \varLambda = \begin{pmatrix}
+      \lambda_1 & & 0 \\
+      & \ddots & \\
+      0 & & \lambda_n
+    \end{pmatrix}
+    = diag(\lambda_1, \lambda_2,\dots, \lambda_n);
+    AU = U\varLambda, \\
+    U^{-1}AU = \varLambda, \underline{A = U\varLambda U^{-1}}.     \qed
+  \end{gather*}
+\end{evidence}
+\begin{theorem}
+  Две матричные функции от одной и той же матрицы $A$ коммутируют
+  \[f(A)\cdot g(A) = g(A)\cdot f(A).\]
+\end{theorem}
+\begin{evidence}
+  \begin{gather*}
+    \text{По теореме 3: } A=U\varLambda U^{-1}, \\
+    \text{По теореме 2: } f(A)=Uf(\varLambda)U^{-1} \hspace{2mm}\text{ и }\hspace{2mm} g(A)=Ug(\varLambda)U^{-1},
+  \end{gather*}
+  \begin{align*}
+    \underline{f(A)g(A)} &= Uf(\varLambda)\underbrace{U^{-1}\cdot U}_{=E}g(\varLambda)U^{-1} =
+    U\underbrace{f(\varLambda)g(\varLambda)}_{\text{диаг. матрицы}}U^{-1} = \\
+    &= Ug(\varLambda)UU^{-1}f(\varLambda)U^{-1} = \underline{g(A)f(A)}. \qed
+  \end{align*}
+\end{evidence}
+\begin{theorem}
+  Если у матрицы $A$ собственные значения $\lambda_k$, то у матричной функции $f(A)$ собственные значения - $f(\lambda_k)$.
+\end{theorem}
+\begin{evidence}
+  \begin{gather*}
+    A \rightarrow \lambda_k, \hspace{7mm} \text{по теореме 3: } A = U\varLambda U^{-1}, \\
+    f(A) \rightarrow f(\lambda_k) \hspace{7mm} \text{по теореме 2: } f(A) = Uf(\varLambda)U^{-1}.
+  \end{gather*}
+  \begin{gather*}
+    f(A) = Uf(\varLambda)U^{-1} = \bigg[f(\varLambda)=\sum_{k=0}^{\infty}\alpha_k\varLambda^k\bigg] = \\
+    = U\begin{pmatrix}
+      \sum_{k=0}^{\infty}\alpha_k\lambda_1^k & & 0 \\
+      & \ddots & \\
+      0 & & \sum_{k=0}^{\infty}\alpha_k\lambda_n^k
+    \end{pmatrix}
+    U^{-1} \hspace{3mm}=\hspace{3mm} U
+    \begin{pmatrix}
+      f(\lambda_1) & & 0 \\
+      & \ddots & \\
+      0 & & f(\lambda_n)
+    \end{pmatrix}
+    U^{-1},
+  \end{gather*}
+  Что и означает, что $f(\lambda_1), f(\lambda_2),\dots,f(\lambda_n)$ являются собственными значениями матрицы $f(A)$, т.к. преобразование подобия не меняет собственных значений. \qed
+\end{evidence}
+\begin{consequence}
+  Матричный ряд $f(A)$ сходится $\Leftrightarrow$ когда сходятся скалярные степенные ряды, стоящие на диагонали $f(\varLambda)$,
+  а они сходятся $\Leftrightarrow$ когда все собственные значения удовлетворяют условию:
+  \[|\lambda_k|<R,\]
+  которое является \textit{необходимым} и \textit{достаточным} условием сходимости матричного ряда.
+\end{consequence}
+\begin{consequence}
+  \begin{gather*}
+    \parallel A\parallel < R \text{ - достаточное условие}, \\
+    |\lambda_k| < R \text{ - необходимое условие} \\
+    \Rightarrow |\lambda_k| \le \parallel A\parallel.
+  \end{gather*}
+  Предположим, что $|\lambda_k|>\parallel A\parallel$, тогда существует такой $R$, что \\ $\parallel A\parallel<R$, а $|\lambda_k| > R$,
+  получается, что достаточное условие выполняется, а необходимое - нет, это противоречие.
+\end{consequence}
+\begin{theorem}{(Формула Кели-Гамильтона).}
+  Всякая матрица удовлетворяет своему характеристическому уравнению. Пусть
+  \[Q(\lambda) = \alpha_0\lambda^n + \alpha_1\lambda^{n-1} +\dots+ \alpha_n\]
+  характеристический полином, а
+  \[Q(\lambda)=0\]
+  характеристическое уравнение, тогда
+  \[Q(A) = 0 = \alpha_0A^n + \alpha_1A^{n-1} +\dots+ \alpha_nE.\]
+\end{theorem}
+\begin{evidence}
+  По теореме 3: $A = U\varLambda U^{-1}$
+  \begin{gather*}
+    Q(A) = UQ(\varLambda)U^{-1} = U \begin{pmatrix}
+      Q(\lambda_1) & & 0 \\
+      & \ddots & \\
+      0 & & Q(\lambda_n)
+    \end{pmatrix}
+    U^{-1} = 0. \qed
+  \end{gather*}
+\end{evidence}
+\begin{theorem}{(Формула Лагранжа-Сильвестра.)}
+  Любая функция матрицы $A$, имеющей различные собственные значения, может быть представлена в виде:
+  \[f(A)=\sum_{k=1}^n f(\lambda_k) \frac{(A-\lambda_1E)\dots(A-\lambda_{k-1}E)(A-\lambda_{k+1}E)\dots(A-\lambda_nE)}
+    {()\lambda_k-\lambda_1)\dots(\lambda_k-\lambda_{k-1})(\lambda_k-\lambda_{k+1})\dots(\lambda_k-\lambda_n)}.\]
+\end{theorem}
+\begin{evidence}
+  Рассмотрим функцию $f(x)$, построим для нее интерполяционный полином Лагранжа степен $(n-1)$, взяв вместо узлов интерполирования
+  собственные значения матрицы $A: \lambda_1, \lambda_2, \dots, \lambda_n$. \\
+  Тогда
+  \[f(x) = Q_{n-1}(x) + R_{n-1}(x).\]
+  Подставим в эту формулу $A$ вместо $x$
+  \begin{gather*}
+    f(A) = Q_{n-1}(A) + R_{n-1}(A). \\
+    R_{n-1}(A) = \frac{\omega(x)}{n!}f^(n)(\eta), \\
+    \omega(A) = (A-\lambda_1E)(A-\lambda_2E)\dots(A-\lambda_nE) \text{ - характеристический полином матрицы $A$}. \\
+    \text{По теореме 6: } \omega(A) = 0 \Rightarrow R_{n-1}(A) = 0, \\
+    f(A) = Q_{n-1}(A) = \sum_{k=1}^n f(\lambda_k) \frac{(A-\lambda_1E)\dots(A-\lambda_{k-1}E)(A-\lambda_{k+1}E)\dots(A-\lambda_nE)}
+      {()\lambda_k-\lambda_1)\dots(\lambda_k-\lambda_{k-1})(\lambda_k-\lambda_{k+1})\dots(\lambda_k-\lambda_n)} = \\
+      = \sum_{k=1}^n f(\lambda_k)S_k(A, \lambda_k), \hspace{3mm} S_k(A, \lambda_k) \text{ - матричный множитель}. \qed
+  \end{gather*}
+\end{evidence}
+
+\end{document}
