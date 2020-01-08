@@ -2,6 +2,7 @@
 
 \usepackage{wrapfig}
 \usepackage{amssymb,amsmath,amsthm,amsfonts}
+\usepackage{cancel}
 \usepackage{pgfplots}
 \usepackage[most]{tcolorbox} % для управления цветом
 %Russian-specific packages
@@ -42,6 +43,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 \maketitle
 \newpage
 
+\section{Теоремы}
 \begin{definition}
   Матрицы $A$ и $B$ называются подобными, если найдется такая неособенная матрица $S$ ($det(S)\ne 0$), что
   $B=SAS^{-1}$.
@@ -181,5 +183,68 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
       = \sum_{k=1}^n f(\lambda_k)S_k(A, \lambda_k), \hspace{3mm} S_k(A, \lambda_k) \text{ - матричный множитель}. \qed
   \end{gather*}
 \end{evidence}
+
+\section{Некоторые свойства матричной экспоненты}
+\marginpar
+{
+  \vspace{2mm}
+  \footnotesize Ряд Тейлора
+}
+\begin{equation}
+  e^{At} = E+At+\frac{A^2t^2}{2!}+\frac{A^3t^3}{3!}+\cdots+\frac{A^kt^k}{k!}+\cdots = \sum_{k=0}^{\infty}\frac{(At)^k}{k!}
+\end{equation}
+\begin{enumerate}
+  \item
+    \begin{equation*}
+      \frac{d}{dt}e^{At} = Ae^{At} = e^{At}A.
+      \label{eq:MatrixTeylorRow}
+    \end{equation*}
+    \begin{evidence}
+      \begin{align*}
+        \frac{d}{dt}e^{At} &= [\text{по формуле (\ref{eq:MatrixTeylorRow})}] = \frac{d}{dt}\sum_{k=0}^{\infty}\frac{(At)^k}{k!} = \sum_{k=0}^{\infty}\frac{A^kt^{k-1}}{(k-1)!} = \\
+          &= A\sum_{k=0}^{\infty}\frac{(At)^{k-1}}{(k-1)!} = Ae^{At} = [\text{по теореме 4}] = e^{At}A. \qed
+      \end{align*}
+    \end{evidence}
+  \item
+    \begin{equation*}
+      \bigg(e^{At}\bigg)^{-1} = e^{-At}
+    \end{equation*}
+    \begin{evidence}
+      \begin{align*}
+        e^{At}e^{-At} &= (E+At+\frac{A^2t^2}{2!}+\dots)(E-At+\frac{A^2t^2}{2!}-\dots) = \\
+        &= E-\cancel{At}+\cancel{\frac{A^2t^2}{2!}}-\dots + \cancel{At}-\cancel{A^2t^2}+\cancel{\frac{A^3t^3}{2!}}-\dots + \\
+        &+ \cancel{\frac{A^2t^2}{2!}}-\cancel{\frac{A^3t^3}{2!}}+\cancel{\frac{A^4t^4}{4}}-\dots = E. \qed
+      \end{align*}
+    \end{evidence}
+  \item
+    \begin{equation*}
+      e^A\cdot e^B \ne e^{A+B}.
+    \end{equation*}
+    \begin{evidence}
+      \begin{align*}
+        e^Ae^B &= (E+A+\frac{A^2}{2!}+\dots)(E+B+\frac{B^2}{2!}+\dots) = \\
+        &= E+A+B+\underbrace{\frac{A^2}{2!}+AB+\frac{B^2}{2!}}+\dots
+      \end{align*}
+      \begin{align*}
+        e^{A+B} &= (E+A+B+\frac{(A+B)^2}{2!}+\dots) = \\
+        &= (E+A+B+\underbrace{\frac{A^2}{2!}+\frac{AB+BA}{2!}+\frac{B^2}{2!}}+\dots) \qed
+      \end{align*}
+      Для того, чтобы $e^A\cdot e^B=e^{A+B}$, матрицы $A$ и $B$ должны коммутировать.
+    \end{evidence}
+    \item
+      \begin{equation*}
+        e^{\alpha A}\cdot e^{\beta A} = e^{(\alpha+\beta)A}.
+      \end{equation*}
+      \begin{evidence}
+        Воспользуемся предыдущими результатами.
+        \begin{align*}
+          e^{At}e^{Aq} &= E+At+Aq+\frac{A^2t^2}{2!}+AtAq+\frac{A^2q^2}{2!}+\dots = \\
+          &= E+A(t+q)+\frac{A^2(t+q)^2}{2!}+\dots \\
+          e^{A(t+q)} &= E+At+Aq+\frac{A^2(t+q)^2}{2!}+\dots = \\
+          &= E+A(t+q)+\frac{A^2(t+q)^2}{2!}+\dots
+        \end{align*}
+        Здесь никаких проблем с коммутативностью матриц нет, поэтому доказательство очевидно. \qed
+      \end{evidence}
+\end{enumerate}
 
 \end{document}
