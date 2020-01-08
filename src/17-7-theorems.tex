@@ -191,13 +191,13 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
   \footnotesize Ряд Тейлора
 }
 \begin{equation}
-  e^{At} = E+At+\frac{A^2t^2}{2!}+\frac{A^3t^3}{3!}+\cdots+\frac{A^kt^k}{k!}+\cdots = \sum_{k=0}^{\infty}\frac{(At)^k}{k!}
+  e^{At} = E+At+\frac{A^2t^2}{2!}+\frac{A^3t^3}{3!}+\cdots+\frac{A^kt^k}{k!}+\cdots = \sum_{k=0}^{\infty}\frac{(At)^k}{k!}.
+  \label{eq:MatrixTeylorRow}
 \end{equation}
 \begin{enumerate}
   \item
     \begin{equation*}
-      \frac{d}{dt}e^{At} = Ae^{At} = e^{At}A.
-      \label{eq:MatrixTeylorRow}
+      \boxed{\frac{d}{dt}e^{At} = Ae^{At} = e^{At}A}
     \end{equation*}
     \begin{evidence}
       \begin{align*}
@@ -207,7 +207,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
     \end{evidence}
   \item
     \begin{equation*}
-      \bigg(e^{At}\bigg)^{-1} = e^{-At}
+      \boxed{\bigg(e^{At}\bigg)^{-1} = e^{-At}}
     \end{equation*}
     \begin{evidence}
       \begin{align*}
@@ -218,7 +218,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
     \end{evidence}
   \item
     \begin{equation*}
-      e^A\cdot e^B \ne e^{A+B}.
+      \boxed{e^A\cdot e^B \ne e^{A+B}}
     \end{equation*}
     \begin{evidence}
       \begin{align*}
@@ -233,7 +233,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
     \end{evidence}
     \item
       \begin{equation*}
-        e^{\alpha A}\cdot e^{\beta A} = e^{(\alpha+\beta)A}.
+        \boxed{e^{\alpha A}\cdot e^{\beta A} = e^{(\alpha+\beta)A}}
       \end{equation*}
       \begin{evidence}
         Воспользуемся предыдущими результатами.
