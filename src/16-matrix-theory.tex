@@ -1,0 +1,297 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[most]{tcolorbox} % для управления цветом
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{16. Обратная матрица, собственные числа и векторы. Задачи на матрицы.
+       Норма матрицы, сходимость матричного степенного ряда, функции от матрицы}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Элементы теории матриц}
+\begin{equation*}
+  A =
+  \begin{pmatrix}
+    a_{11} & a_{12} & \dots & a_{1n} \\
+    a_{21} & a_{22} & \dots & a_{2n} \\
+    \hdotsfor{4} \\
+    a_{m1} & a_{m2} & \dots & a_{mn}
+  \end{pmatrix}
+\end{equation*}
+\begin{equation*}
+  \begin{vmatrix}
+    a_{11} & a_{12} \\
+    a_{21} & a_{22}
+  \end{vmatrix}
+  ,\hspace{7pt}
+  det(A), \hspace{7pt}
+  \underbrace
+  {
+    \begin{Vmatrix}
+      a_{11} & a_{12} \\
+      a_{21} & a_{22}
+    \end{Vmatrix}
+  }_{\text{норма матрицы}}
+  \hspace{7pt} \text{определитель матрицы}.
+\end{equation*}
+\subsection{Определения}
+\begin{itemize}
+  \item Транспонированная матрица $B = A^T$, $b_{ij}=a_{ji}$.
+  \item $X=0$ - нулевая матрица, все ее элементы равны $0$.
+  \item Матрица называется левый (нижний) треугольник, если все ее элементы \textit{выше} главной диагонали равны $0$.
+  \item Соответственно - правый (верхний) треугольник, если элементы \textit{ниже} главной диагонгали равны $0$.
+  \item Диагональная матрица - все элементы, кроме диагональных, равны $0$:
+    $D = diag(d_{11}, d_{22},\dots, d_{mn})$. \\
+    Диагональная матрица называется \textit{единичной}, если все диоагональные элементы равны $1$
+    \begin{equation*}
+      E =
+      \begin{pmatrix}
+        1 & \dots & 0 \\
+         & 1 &  \\
+        0 & \dots & 1
+      \end{pmatrix}
+      .
+    \end{equation*}
+\end{itemize}
+\subsection{Операции}
+  \begin{enumerate}
+    \item $C=A+B$, \hspace{7pt}
+      $c_{ij}=a_{ij}+b_{ij}$.
+    \item $C=\alpha A$, \hspace{7pt}
+      $c_{ij}=\alpha a_{ij}$,
+      $\alpha$ - скаляр.
+    \item $C=AB$, \hspace{7pt}
+      \[c_{ij} = \sum_{k=1}^n a_{ik}b_{kj},\] \\
+      $AB \ne BA$, если же $AB=BA$, то такие матрицы называются коммутирующие или перестановочные.
+    \item Вместо операции деления вводится \textit{умножение на обратную матрицу}; \\
+      Обратная матрица: \[X=A^{-1},\] \\
+      \[AX=E, XA=E\] \\
+      Пусть $x_k$ - $k$-й столбец обратной матрицы, а $e_k$ - $k$-й столбец единичной матрицы,
+      тогда $Ax_k=e_k, \hspace{5pt} k=1,2,\dots,n$. Если $det(A) \ne 0$, то система имеет единственное решение,
+      если $det(A)=0$, то матрица называется особенной.
+  \end{enumerate}
+
+\section{Собственные значения и векторы}
+\begin{equation}
+  Ax = \lambda x
+\end{equation}
+\begin{center}
+  $\lambda$ - \textit{собственные значения}, вектор $x$ - \textit{собственный вектор}.
+\end{center}
+\begin{equation}
+  (A - \lambda E)x = 0
+\end{equation}
+Пусть $det(A-\lambda E) \ne 0$, тогда система (2) имеет единственное решение $x=0$. \\
+Чтобы найти вектор $x$, отличный от нулевого, нужно потребовать, чтобы определитель
+\begin{equation}
+  det(A-\lambda E)=0
+\end{equation}
+\begin{gather*}
+  det(A-\lambda E) = (-1)^n\lambda^n+b_1\lambda^{n-1}+\dots+b_{n-1}\lambda+b_n = 0 \\
+  \small\text{{характеристическое уравнение, его $n$ корней - собственные значения.}}
+\end{gather*}
+Для каждого $\lambda_i$ можно найти решение $x_i$ однородной системы $Ax_i=\lambda_ix_i$, т.е. собственный вектор. \\
+
+Таким образом, для матрицы малой размерности может быть предложен следующий алгоритм:
+\begin{itemize}
+  \item из уравнения (3) находим все собственные значения,
+  \item для каждого собственного значения из системы (2) находим собственный вектор.
+\end{itemize}
+
+\section{Задачи на матрицы}
+\begin{enumerate}
+  \item $(AB)^T = B^T A^T$
+  \item $(AB)^{-1} = B^{-1}A^{-1}$
+  \item $(A^T)^{-1} = (A^{-1})^T$
+  \item $DA$ - при умножении на диагональную матрицу \textit{слева} все \textit{строки} матрицы умножаются на соответствующие диагональные элементы.
+  \item $AD$ - при умножении на диагональную матрицу \textit{справа} все \textit{столбцы} матрицы умножаются на соответствующие диагональные элементы.
+  \item
+    \[\begin{pmatrix}
+      * & 0 & 0 \\
+      * & * & 0 \\
+      * & * & *
+    \end{pmatrix} \times
+    \begin{pmatrix}
+      * & 0 & 0 \\
+      * & * & 0 \\
+      * & * & *
+    \end{pmatrix} =
+    \begin{pmatrix}
+      * & 0 & 0 \\
+      * & * & 0 \\
+      * & * & *
+    \end{pmatrix} \hspace{7pt} \text{получили тот же тип.}\]
+  \item
+    \[\begin{pmatrix}
+    * & 0 & 0 \\
+    * & * & 0 \\
+    * & * & *
+    \end{pmatrix}^{-1} =
+    \begin{pmatrix}
+      * & 0 & 0 \\
+      * & * & 0 \\
+      * & * & *
+    \end{pmatrix}\]
+  \item Собственные значения диагональной матрицы равны ее диагональным элементам.
+  \item Собственные значения треугольной матрицы тоже равне ее диагональным элементам.
+  \item Сумма собственных значений матрицы равна сумме ее диагональных элементов
+    \[\sum_{k=1}^N \lambda_k = \underbrace{\sum_{k=1}^N a_{kk}}_{\text{след матрицы}},\]
+    а произведение - ее определителю
+    \[\prod_{k=1}^N \lambda_k = det(A).\]
+    Если матрица особенная ($det(A)=0$), то хотя бы одно собтвенное значение равно $0$.
+\end{enumerate}
+
+\section{Дифференцирование и интегрирование матриц по параметру}
+\begin{gather*}
+  B(t) = \frac{d}{dt}A(t), \hspace{5pt} b_{ij}(t)=\frac{d}{dt}a_{ij}(t), \\
+  F = \int_a^b A(t)\ dt, \hspace{5pt} f_{ij} = \int_a^b a_{ij}(t)\ dt.
+\end{gather*}
+\newpage
+\marginpar
+{
+  \vspace{4mm}
+  \footnotesize \[A^k = \underbrace{AA\dots A}_{k}, \hspace{2pt} A^0 \equiv E\]
+}
+\begin{gather*}
+  \frac{d}{dt}A^2(t), \\
+  B(t) = A^2(t), \hspace{5pt} b_{ij}(t) = \sum_{k=1}^n a_{ik}(t)a_{kj}(t), \\
+  \frac{d}{dt}B(t) = \frac{dA}{dt}A + A\frac{dA}{dt}, \\
+  \text{для } A^{17}: \frac{d}{dt}B(t) = A\frac{dA}{dt}A^{15} + A^2\frac{dA}{dt}A^{14} +\dots \\
+\end{gather*}
+Найдем производную от обратной матрицы
+\begin{gather*}
+  AA^{-1}=E, \\
+  \frac{dA}{dt}A^{-1} + A\frac{d}{dt}A^{-1} = 0, \hspace{7pt}
+  \frac{d}{dt}A^{-1} = - A^{-1}\frac{dA}{dt}A^{-1}.
+\end{gather*}
+
+\section{Норма матрицы $\parallel A\parallel$}
+Нормой матрицы называется число, удовлетворяющее следующим условиям (аксиомам):
+\begin{enumerate}
+  \item норма матрицы не отрицательна $\parallel A\parallel >0$, $\parallel A\parallel =0 \Rightarrow A=0$,
+  \item $\parallel \alpha A\parallel = |\alpha|\cdot\parallel A\parallel$,
+  \item $\parallel A+B\parallel \hspace{3mm}\le\hspace{3mm} \parallel A\parallel + \parallel B\parallel$,
+  \item $\parallel AB\parallel \hspace{3mm}\le\hspace{3mm} \parallel A\parallel \cdot \parallel B\parallel$.
+\end{enumerate}
+Норма называется \textit{канонической}, если дополнительно выполняются еще две аксиомы:
+\begin{equation*}
+  5. \parallel A\parallel \ge |a_{ij}|, \hspace{5pt} 6. \hspace{1mm}|b_{ij}>|a_{ij}| \Rightarrow \parallel B\parallel > \parallel A \parallel.
+\end{equation*}
+Все 3 следующие нормы являются каноническими:
+\begin{gather*}
+  \parallel A\parallel_I = max_i \sum_{j=1}^n |a_{ij}|, \\
+  \parallel A\parallel_{II} = max_j \sum_{i=1}^n |a_{ij}|, \\
+  \parallel A \parallel_{III} = \sqrt{\sum_{i=1}^n \sum_{j=1}^n |a_{ij}|^2}.\\
+\end{gather*}
+
+Примеры:
+
+\begin{minipage}{1\linewidth}
+  \begin{wraptable}{l}{5mm}
+    \begin{equation*}
+      A = \begin{pmatrix}
+        1 & -2 & 3 \\
+        -4 & 5 & -6 \\
+        7 & -8 & 9
+      \end{pmatrix}
+    \end{equation*}
+  \end{wraptable}
+  \begin{align*}
+    &\parallel A\parallel_I = 24, \\
+    &\parallel A\parallel_{II} = 18, \\
+    &\parallel A\parallel_{III} \approx 16.9.
+  \end{align*}
+  \begin{wraptable}{l}{5mm}
+    \begin{equation*}
+      A = \begin{pmatrix}
+        1 & 0 & 0 \\
+        0 & 1 & 0 \\
+        0 & 0 & 1
+      \end{pmatrix}
+    \end{equation*}
+  \end{wraptable}
+  \begin{align*}
+    &\parallel A\parallel_I = 1, \\
+    &\parallel A\parallel_{II} = 1, \\
+    &\parallel A\parallel_{III} = \sqrt{3}.\\
+  \end{align*}
+\end{minipage}
+\begin{center}
+  Знак сравнения между нормами $I-III$ ставить \textit{нельзя}.
+\end{center}
+
+\section{Матричный ряд}
+\begin{gather*}
+  P_m(A) = \alpha_0E + \alpha_1A + \alpha_2A^2 +\dots+ \alpha_mA^m = \sum_{k=0}^m \alpha_kA^k, \\
+  \small{\text{$\alpha$ - скалярный коэффициент, как и прочие строчные греческие буквы},} \\
+  P(A) = \sum_{k=0}^{\infty} \alpha_kA^k \hspace{5pt} \text{- матричный степенной ряд},
+\end{gather*}
+Матричный ряд будет сходящимся, если сходятся все $n^2$ скалярных рядов для элементов матрицы $P(A)$.
+\begin{gather*}
+  P(A) = \sum_{k=0}^{\infty}\alpha_kA^k, \hspace{3mm} p_{ij}, \\
+  \text{Введем матрицу} \hspace{3mm} U^{(k)} = \alpha_kA^k, \hspace{3mm} u_{ij}^{(k)},
+\end{gather*}
+\begin{align*}
+  |p_{ij}| &= \bigg|\sum_{k=0}^{\infty}u_{ij}^{(k)}\bigg| \le \sum_{k=0}^{\infty}\bigg|u_{ij}^{(k)}\bigg| \stackrel{5}{\le}
+  \sum_{k=0}^{\infty}\parallel U^{(k)}\parallel = \sum_{k=0}^{\infty}\parallel \alpha_kA^k\parallel \stackrel{2}{=} \\
+  &\stackrel{2}{=} \sum_{k=0}^{\infty}|\alpha_k|\parallel A^k\parallel \hspace{1mm} \stackrel{4}{\le}
+  \underbrace{\sum_{k=0}^{\infty}|\alpha_k|\parallel A\parallel^k}_{\text{скалярный степенной ряд}}.
+\end{align*}
+В результате \textit{достаточным} условием сходимости матричного ряда является выполнение условия
+\begin{equation*}
+  \boxed{\parallel A\parallel < R}
+\end{equation*}
+являющегося, в свою очередь, условием абсолютной сходимости скалярного степенного ряда.
+$R$ - радиус сходимости скалярного степенного ряда. \\
+
+Пример:
+\begin{align*}
+  A = \begin{pmatrix}
+    1 & -2 & 3 \\
+    -4 & 5 & -6 \\
+    7 & -8 & 9
+  \end{pmatrix}
+  &&
+  \parallel A\parallel_I = 24, \parallel A\parallel_{II} = 18, \parallel A\parallel_{III} = 16.9,
+\end{align*}
+$R = 17.5 \hspace{5mm} \text{- ряд сходится}$, \\
+$R = 16.7 \hspace{5mm} \text{- достаточное условие не выполянется, сходится ли ряд - не знаем}$. \\
+
+Если матричный ряд сходится, то его сумму будем называть \textit{матричной функцией}. \\
+
+Примеры матричных функций:
+\begin{align*}
+  &e^x=\sum_{k=0}^{\infty}\frac{x^k}{k!} \Rightarrow e^A=\sum_{k=0}^{\infty}\frac{A^k}{k!}, & R=\infty, \\
+  &cos(x)=\sum_{k=0}^{\infty}\frac{(-1)^kx^{2k}}{(2k)!} \Rightarrow cos(A)=\sum_{k=0}^{\infty}\frac{(-1)^kA^{2k}}{(2k)!},
+  & R=\infty, \\
+  &\underbrace{\frac{1}{1-x}=\sum_{k=0}^{\infty}x^k}_{\text{геом. прогрессия}} \Rightarrow (E-A)^{-1}=\sum_{k=0}^{\infty}A^k, &R= \hspace{2mm}1.
+\end{align*}
+
+\end{document}
