@@ -1,0 +1,300 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{enumerate}
+\usepackage{cancel}
+\usepackage[most]{tcolorbox} % для управления цветом
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{20. Метод Гаусса и явление плохой обусловленности. LU-разложение матрицы. Подпрограммы DECOMP и SOLVE}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Явление плохой обусловленности матриц}
+Дана линейная алгебраическая система:
+\begin{equation}
+  Ax=b, \hspace{5mm} det(A) \ne 0,
+  \label{eq:Eq}
+\end{equation}
+\begin{align*}
+  A &- \text{квадртная матрица}, \\
+  b &- \text{заданный вектор-столбец}, \\
+  x &- \text{искомый вектор-столбец}.
+\end{align*}
+Как погрешность в исходных данных влияет на точность решения?
+\begin{importantblock}
+  Если малые изменения в исходной информации приводят к сильному изменению решения, то такая матрица (и сама система (\ref{eq:Eq})) называется \textit{плохо обусловленной}.
+\end{importantblock}
+\vspace{3mm}
+\noindent Получим \textit{количественные характеристики} плохой обусловленности.
+\begin{enumerate}[I.]
+  \item
+    \begin{gather*}
+      b \rightarrow b + \varDelta b \Rightarrow x \rightarrow x + \varDelta x, \\
+      A(x+\varDelta x) = b+\varDelta b, \hspace{3mm}
+      \cancel{Ax}+A\varDelta x = \cancel{b}+\varDelta b, \\
+      A\varDelta x = \varDelta b, \hspace{3mm}
+      \varDelta x = A^{-1}\varDelta b, \\
+      \parallel\varDelta x\parallel \le \parallel A^{-1}\parallel \cdot \parallel\varDelta b\parallel, \hspace{3mm}
+      \parallel b\parallel \le \parallel A\parallel \cdot \parallel x\parallel, \\
+      \text{перемножим эти два неравенства и разделим результат на $\parallel x\parallel\cdot\parallel b\parallel$}: \\
+      \frac{\parallel\varDelta x\parallel}{\parallel x\parallel} \le \underbrace{\parallel A\parallel \cdot \parallel A^{-1}\parallel}
+        _{cond(A)} \cdot \frac{\parallel\varDelta b\parallel}{\parallel b\parallel}.
+    \end{gather*}
+    \begin{flushright}
+      \footnotesize {
+      $\frac{\parallel\varDelta x\parallel}{\parallel x\parallel}$ - относительная погрешность результата, \\
+      $\frac{\parallel\varDelta b\parallel}{\parallel b\parallel}$ - относительная погрешность исходных данных.}
+    \end{flushright}
+    $cond(A)$ - \textit{число обусловленности матрицы} или коэффициент усиления погрешности.
+    Если $cond(A) \gg 1$, то система - плохо обусловлена.
+  \item
+    \begin{gather*}
+      A \rightarrow A+\varDelta A \Rightarrow x \rightarrow x+\varDelta x, \\
+      (A+\varDelta A)(x+\varDelta x) = b, \\
+      \cancel{Ax}+A\varDelta x + \varDelta A(x+\varDelta x) = \cancel{b}, \\
+      A^{-1} \bigg|\hspace{3mm} A\varDelta x = - \varDelta A(x+\varDelta x), \\
+      \varDelta x = A^{-1}\varDelta A(x+\varDelta x), \\
+      \text{берем норму и делим на $\parallel x+\varDelta x\parallel$}: \\
+      \frac{\parallel\varDelta x\parallel}{\parallel x+\varDelta x\parallel} \le \parallel A^{-1}\parallel \cdot \parallel\varDelta A\parallel \cdot
+        \frac{\parallel A\parallel}{\parallel A\parallel}, \\
+      \frac{\parallel\varDelta x\parallel}{\parallel x+\varDelta x\parallel} \le  \underbrace{\parallel A\parallel \parallel \cdot A^{-1}\parallel}_{cond(A)}
+        \cdot \frac{\parallel\varDelta A\parallel}{\parallel A\parallel}.
+    \end{gather*}
+\end{enumerate}
+Пример: \\
+\begin{align*}
+  &10^{-5} \le \underline{10^7} \cdot 10^{-12} - \text{погрешнось размерной сетки}, \\
+  &10 \le \underline{10^4} \cdot 10^{-3} - \text{инженерная погрешность}
+\end{align*}
+Таким образом, все зависит от задачи.\\
+
+Существуют и другие числа обусловленности, так плохо обусловленной мтарицей является матрица с большим разбросом собственных значений:
+\begin{equation*}
+  k(A) = \frac{|\lambda_k|_{max}}{|\lambda_k|_{min}}.
+\end{equation*}
+Легко показать, что $k(A) \le cond(A)$:
+\begin{gather*}
+  \frac{|\lambda_k|_{max}}{|\lambda_k|_{min}} \le \parallel A\parallel \parallel \cdot A^{-1}\parallel, \\
+  \text{по Следствию 2 к Теореме 5 } |\lambda_k| \le \parallel A\parallel, \frac{1}{|\lambda_k|} \ge \parallel A^{-1}\parallel.
+\end{gather*}
+
+Покажем, что матрица с большим разбросом собственных значений является плохо обусловленной, что приводит к большой погрешности.\\
+
+\noindent \textit{Утверждение 1.} Максимальные по модулю элементы матрицы $A$ имеют величину порядка $|\lambda_k|_{max}$, а могут и значительно ее превышать.
+Это следует из неравенства $\lambda_k| \le \parallel A\parallel$. \\
+
+\noindent \textit{Утверждение 2.} Собственные значения $\lambda_k$ могут изменяться на величину порядка элементов матрицы возмущения $\varDelta A$.
+\begin{gather*}
+  \varDelta A = \varepsilon E, \hspace{3mm} A+\varDelta A \rightarrow A+\varepsilon E, \\
+  A \rightarrow \lambda_k, \hspace{3mm} A+\varepsilon E \rightarrow \lambda_k+\varepsilon.
+\end{gather*}
+Пусть относительная погрешность элементов матрицы $A$ $\delta \ll 1$. \\
+
+\textit{Шаг 1.}
+\begin{gather*}
+  \varDelta A \rightarrow \delta|a_{ik}|_{max}, \\
+  \text{по утверждению 1: } \varDelta A \rightarrow \delta|\lambda_k|_{max}.
+\end{gather*}
+
+\textit{Шаг 2.} В соответствии с утверждением 2 $\lambda_k\pm\delta|\lambda_k|_{max}$.
+  $|\lambda_k|_{max}$ изменится крайне незначительно, а $|\lambda_k|_{min}$ может измениться достаточно сильно. \\
+
+\textit{Шаг 3.}
+  \begin{gather*}
+    A \rightarrow \lambda_k, A^{-1} \rightarrow \frac{1}{\lambda_k}, \\
+    \frac{1}{|\lambda_k|_{min}} - \text{самые большие собственные значения } A^{-1}.
+  \end{gather*}
+  Если $|\lambda_k|_{min}$ изменилось сильно, то сильно изменились элементы обратной матрицы, а, следовательно, сильно изменилось решение.
+  \begin{importantblock}
+    Врем в $min$ собственном значении, значит врем в обратной матрице.
+  \end{importantblock}
+\begin{gather*}
+  Ax=b, \\
+  x=A^{-1}b,
+\end{gather*}
+
+Описанные неприятности будут появляться тем быстрее, чем \textit{больше разброс} элементов матрицы $A$.
+
+\section{Метод Гаусса}
+Методы решения системы (\ref{eq:Eq}) делятся на две большие группы:
+\begin{itemize}
+  \item точные,
+  \item итерационные.
+\end{itemize}
+\textit{Точные} методы в отсутствии ошибок округления позволяют получить точные решения за конечное число арифметических операций. \\
+В ходе применения \textit{итерационных} методов рождается последовательность векторов, сходящихся к решению. \\
+
+Типичный точный метод - \textbf{метод Гаусса}. Его "грубая" схема выглядит следующим образом: \\
+
+\noindent \textit{Прямой ход.} В первом уравнении делим все на $a_{11}$, выражем $x_1$, подставляем во все остальные уравнения и приводим подобные. \\
+Аналогично из второго уравнения \textit{исключаем} $x_2$ и т.д. В результате получаем верхнюю треугольную матрицу.\\
+
+\noindent \textit{Обратный ход.}
+\begin{equation*}
+  \begin{pmatrix}
+    * & * & * \\
+      & * & * \\
+    0 &   & *
+  \end{pmatrix}
+\end{equation*}
+Из последнего уравнения находим $x_N$, из прелпослднего - $x_{N-1}$, и т.д.\\
+
+Недостаток "грубой" схемы - возможное деление на нулевой или близкий к нулю элемент. Для его устранения используется \textit{выбор ведущего элемента}. \\
+
+\noindent \textit{Вариант 1.} На $k$-м шаге в оставшейся матрице находят самый большой по модулю элемент. Затем строки и столбцы меняют так, чтобы этот элемент поменялся местами с $a_{kk}$,
+\begin{equation*}
+  \begin{pmatrix}
+    . & . & . & . & . \\
+    0 & . & . & . & . \\
+    0 & 0 & a_{kk} & * & * \\
+    0 & 0 & * & * & * \\
+    0 & 0 & * & * & *
+  \end{pmatrix}.
+\end{equation*}
+Делим уже на него и далее по алгоритму. \textit{Но} в этом варианте при перестановке столбцов меняется нумерация компонент вектора $x$. \\
+
+\noindent \textit{Вариант 2.} На $k$-м шаге максимальный по модулю элемент разыскивают только в $k$-м столбце, в таком случае переставляются только строки. \\
+На практике этот вариант используют чаще.
+
+\subsection{Требования к хорошей программе метода Гаусса}
+\begin{enumerate}
+  \item Должен быть реализован выбор ведущего элемента.
+  \item Программа должна оценивать число обусловленности матрицы - $cond(A)$.
+  \item Программа должна эффективно решать несколько систем уравнений с одной и той же матрицей $A$ и различными векторами $b$.
+\end{enumerate}
+Реализовать 3-е требование помогает $LU$-разложение матриц.
+
+\section{$LU$-разложение матрицы}
+$LU$-разложение матрицы - представление матрицы в следующем виде:
+\begin{gather*}
+  A = LU, \text{где} \\
+  L - \text{левая треугольная матрица с единичной диагональю}, \\
+  U - \text{правая треугольная матрица, на диагонали - все, что угодно}.
+\end{gather*}
+Если $LU$-разложение построено, то решение исходной системы $Ax=b$ сводится к решению двух систем с трегольными матрицами:
+\marginpar
+{
+  \vspace{11mm}
+  \footnotesize ввели обознач.
+}
+\begin{gather}
+  Ly=b, \\ Ux=y.
+\end{gather}
+
+$LU$-разложение выполняется \text{однократно}, а системы (2) и (3) решаются столько раз, сколько имеется различных векторов $x$. \\
+
+\subsection{Пример - матрица $4\times 4$}
+\begin{equation*}
+  A = A_0 =
+  \begin{pmatrix}
+    a_{11} & a_{12} & a_{33} & a_{14} \\
+    a_{21} & a_{22} & a_{23} & a_{24} \\
+    a_{31} & a_{32} & a_{33} & a_{34} \\
+    a_{41} & a_{42} & a_{43} & a_{44} \\
+  \end{pmatrix},
+\end{equation*}
+Рассмотрим левую треугольную матрицу $M_1$, которая отличается от единичной первым столбцом:
+\begin{equation*}
+  M_1 =
+  \begin{pmatrix}
+    1 & 0 & 0 & 0 \\
+    -a_{21}/a_{11} & 1 & 0 & 0 \\
+    -a_{31}/a_{11} & 0 & 1 & 0 \\
+    -a_{41}/a_{11} & 0 & 0 & 1
+  \end{pmatrix},
+\end{equation*}
+Умножим исходную матрицу на матрицу $M_1$ слева:
+\begin{equation*}
+  A_1 = M_1 A_0 =
+  \begin{pmatrix}
+    a_{11} & \dots & \dots & a_{14}^* \\
+    0 & \hdotsfor{3} \\
+    0 & \hdotsfor{3} \\
+    0 & \hdotsfor{3} \\
+  \end{pmatrix}.
+\end{equation*}
+На втором шаге строим матрицу $M_2$, которая отличается от единичной вторым столбцлом ($^*$ - элементы матрицы $A_1$):
+\begin{equation*}
+  M_2 =
+  \begin{pmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & -a_{32}^*/a_{22}^* & 1 & 0 \\
+    0 & -a_{42}^*/a_{22}^* & 0 & 1
+  \end{pmatrix},
+\end{equation*}
+\begin{gather*}
+  A_2 = M_2A_1 =
+  \begin{pmatrix}
+    + & + & \dots & a_{14}^{**} \\
+    0 & + & \hdotsfor{2} \\
+    0 & 0 & \hdotsfor{2} \\
+    0 & 0 & \hdotsfor{2}
+  \end{pmatrix}, \\
+  + - \text{элементы не обязательно нулевые}.
+\end{gather*}
+На последнем шаге умножаем $A_2$ на $M_3$, где
+\begin{equation*}
+  M_3 =
+  \begin{pmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & 0 & 1 & 0 \\
+    0 & 0 & -a_{43}^{**}/a_{33}^{**} & 1
+  \end{pmatrix}.
+\end{equation*}
+Тогда
+\begin{gather*}
+  A_3 = M_3A_2 = \underbrace{M_1M_2M_3}_{M}A = U, \\
+  M^{-1} \bigg| \hspace{3mm} MA=U, \\
+  A = M^{-1}U, \hspace{3mm} M^{-1} = L, \\
+  A = LU.
+\end{gather*}
+\begin{flushright}
+  \footnotesize Здесь учитывались "Задачи на матрицы" 6 и 7.
+\end{flushright}
+
+\section{Подпрограммы DECOMP и SOLVE}
+Программное обеспечение состоит из двух программ:
+\begin{itemize}
+  \item $DECOMP(NDIM, N, A, COND, IPVT, WORK)$ \\
+    Выполянет $LU$ разложение матрицы, \vspace{2mm} \\
+    $NDIM$ - длина столбца матрицы $A$ в операторе описания, \\
+    $N$ - порядок матрицы (системы уравнений), \\
+    $A$ - исходная матрица, в ней же будут размещены матрицы $L$ и $U$, \\
+    $COND$ - оценка числа обусловленности, \textit{выходной}\\
+    $IPVT$ - вектор индексов ведущих элементов, его $k$-я компонента указывает, какое уравнение используется для исключения $x_k$ на \\ $k$-м шаге, \\
+    $WORK$ - одномерный рабочий массив (размерность $N$).
+  \item $SOLVE(NDIM, N, A, B, IPVT)$ \\
+    Решает системы ($2$) и ($3$) с треугольными матрицами, \\
+    $B$ - вектор решения $x$, сначала в нем правые части системы ($1$).
+\end{itemize}
+
+\end{document}
