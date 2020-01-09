@@ -53,7 +53,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 \end{theorem}
 \begin{evidence}
   \begin{gather*}
-    det(B=\lambda E) = \\
+    det(B-\lambda E) = \\
     = det(SAS^{-1}-\lambda SS^{-1}) = det(S(A-\lambda E)S^{-1}) = det(S) det(A-\lambda E)det(S^{-1}) = \\
     = det(A-\lambda E).
   \end{gather*}
@@ -64,9 +64,9 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 \end{theorem}
 \begin{evidence}
   \begin{gather*}
-    f(B) = \sum_{k=0}^{\infty}\lambda_kB^k \boxed{=} \\
+    f(B) = \sum_{k=0}^{\infty}\alpha_kB^k \boxed{=} \\
     B^k = SA\underbrace{S^{-1}S}_{E}AS^{-1} \dots SAS^{-1} = SA^kS^{-1} \\
-    \boxed{=} \sum_{k=0}^{\infty}\lambda_kSA^kS = S\bigg(\sum_{k=0}^{infty}\alpha_kA^k\bigg)S^{-1} = \sum_{k=0}^{\infty}\alpha_kA^k.     \qed %символ Халмоша
+    \boxed{=} \sum_{k=0}^{\infty}\alpha_kSA^kS^{-1} = S\bigg(\sum_{k=0}^{\infty}\alpha_kA^k\bigg)S^{-1} = \sum_{k=0}^{\infty}\alpha_kA^k.     \qed %символ Халмоша
   \end{gather*}
 \end{evidence}
 \begin{theorem}
