@@ -1,0 +1,115 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{enumerate}
+\usepackage{cancel}
+\usepackage[most]{tcolorbox} % для управления цветом
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{21. Метод последовательных приближений для решения линейных систем}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\noindent Методы последовательных приближений (\textit{итерационные} методы) дают возможность для системы $Ax=b$ строить последовательность
+векторов $x_0, x_1, \dots, x_n, \dots$, пределом которой должно быть точное решение $x^*$: \[x^*=\lim_{n\rightarrow\infty x_n}.\]
+\begin{equation}
+  Ax = b, \hspace{3mm} det(A) \ne 0.
+  \label{eq:SysLineEq}
+\end{equation}
+Эквивалентными преобразованиями система (\ref{eq:SysLineEq}) сводится к виду
+\begin{equation}
+  x = Cx+d.
+  \label{eq:NewSys}
+\end{equation}
+Точное решение системы (\ref{eq:NewSys}) имеет вид:
+\begin{equation}
+  x^* = (E-C)^{-1}d,
+  \label{eq:AccurateSole}
+\end{equation}
+\begin{center}
+  $x^* = x_n+\varepsilon_n.$
+\end{center}
+Вместо системы (\ref{eq:NewSys}) будем решать систему разностных уравнений
+\begin{equation}
+  x_{n+1} = Cx_n+d
+  \label{eq:DiffEq}
+\end{equation}
+пошаговым методом, при $x_n \rightarrow x^* (n \rightarrow \infty)$.\\
+
+\noindent Система (\ref{eq:DiffEq}) имеет вид системы линейных разностных уравнений (вопрос "18. Решение систем..."), поэтому ее решение записывается в виде
+\begin{equation}
+  x_n = C^nx_0 + (E-C^n)(E-C)^{-1}d.
+  \label{eq:DiffSysSolve}
+\end{equation}
+Из (\ref{eq:AccurateSole}) вычитаем (\ref{eq:DiffSysSolve})
+\begin{align*}
+  x^*-x_n = \varepsilon_n &= -C^nx_0 + C^n\underbrace{(E-C)^{-1}d}_{x^*} \\
+  &= C^n(x^*-x_0) = C^n\varepsilon_0.
+\end{align*}
+Для обеспечения условия сходиомости для точного решения ($\varepsilon \rightarrow 0, \hspace{2mm}\\ n \rightarrow \infty$) необходимо, чтобы элементы матрицы $C^n$
+при $n \rightarrow \infty$ стремились бы к $0$. Для этого необходимо и достаточно, чтобы все собственные значения матрицы $C^n$
+были по модулю меньше единицы. \\
+Если все собственные значения матрицы различны, то по \textit{теореме 7}:
+\begin{equation*}
+  C^n = \sum_{k=1}^N T_k\lambda_k^n,
+\end{equation*}
+Условие сходиомости:
+\begin{equation}
+  |\lambda_k|<1, \hspace{3mm} k=1,2,\dots,N.
+  \label{eq:NesCond}
+\end{equation}
+Из \textit{следствия 2} к \textit{теореме 5} \[|\lambda_k|\le\parallel C\parallel,\]
+поэтому на практике вместо необходимого и достаточного условия (\ref{eq:NesCond}) используют достаточное условие
+\begin{equation}
+  \parallel C\parallel < 1.
+  \label{eq:PlentyCond}
+\end{equation}
+Процесс сходится тем быстрее, чем меньше $\lambda_k$.
+Выбор $x_0$ не влияет на факт сходимости, но его удачный выбор сокращает количество итераций.
+\begin{importantblock}
+  Искусство пользователя заключается в том, чтобы перейти от системы (\ref{eq:SysLineEq}) к системе (\ref{eq:NewSys}) так,
+  чтобы выполнялись условия (\ref{eq:NesCond}) и (\ref{eq:PlentyCond}).
+\end{importantblock}
+
+\noindent Универсального алгоритма малой трудоемкости нет, поэтому используют различные приемы для конкретного вида матриц.\\
+
+\noindent \textit{Пример.} \\
+\begin{equation*}
+  Ax=b, \settag{1}
+\end{equation*}
+Пусть диагональные элементы матрицы $A$ по модулю значительно превышают остальные элементы соответствующих строк. \\
+Разделим каждое уравнение на диагональные элементы
+\begin{gather*}
+  A^*x = b^*, \settag{1*} \\
+  x = \underbrace{(E-A^*)}_{C}x + b^*.
+\end{gather*}
+$\parallel C\parallel \ll 1$, потому что на главной диагонали матрицы $A^*$ стоят единицы, а у матрицы $(E-A^*)$ расположены нули.
+Вне главной диагонали у обеих матриц находятся малые по модулю элементы, что вместе и обеспечивает условия (\ref{eq:NesCond}) и (\ref{eq:PlentyCond}).
+
+\end{document}
