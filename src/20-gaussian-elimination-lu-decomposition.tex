@@ -297,4 +297,19 @@ $LU$-разложение выполняется \text{однократно}, а
     $B$ - вектор решения $x$, сначала в нем правые части системы ($1$).
 \end{itemize}
 
+\subsection{Нахождение обратной матрицы с помощью программ DECOMP и SOLVE}
+\begin{gather*}
+  X=A^{-1}, \hspace{3mm} x_k - k\text{-й столбец обратной матрицы}. \\
+  AX = E, \\
+  \underbrace{Ax_k = e_k}_{k=1,2,\dots,N}, \hspace{3mm} e_k - \text{$k$-й столбец единичной матрицы}.
+\end{gather*}
+\textit{Однократно} вызывается программа \textit{DECOMP} и строится $LU$-разложение матрицы. \\
+
+Цикл по $k$ от $1$ до $N$:
+\begin{align*}
+  &e_k \rightarrow B, \\
+  &SOLVE(\dots, A, B, \dots), \\
+  &B \rightarrow \text{$k$-й столбец $A^{-1}$}.
+\end{align*}
+
 \end{document}
