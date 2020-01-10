@@ -1,0 +1,170 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{25. Методы Адамса. Локальная и глобальная погрешности, степень метода}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\begin{importantblock}
+  \begin{equation}
+    \frac{dx}{dt} = f(t, x),\, x(t_0) = x_0
+    \label{eq:LDLE}
+  \end{equation}
+  \begin{equation}
+    x_{n+1} = x_n + \int_{t_n}^{t_{n+1}} f(\tau, x(\tau))\,d\tau
+    \label{eq:Solution}
+  \end{equation}
+  \begin{center}
+    \small{Основные формулы}
+  \end{center}
+\end{importantblock}
+
+\section{Методы Адамса}
+Дальнейшее использование квадратурных формул непосредственно затруднено (средних прямоугольников, Симпсона, Чебышёва, Гаусса), т.к. требуют знаний $x(t)$
+  внутри промежутка $[t_n, t_{n+1}]$. \\
+Одним из путей решения возникшей проблемы являются методы Адамса. По предыдущим точкам строится интерполяционный полином для $f(\tau, x(\tau))$, подставляется
+  под знак интеграла в формуле (\ref{eq:Solution}) и интегрируется. Так, например, по двум точкам строится полином:
+\[Q_1(\tau) = \frac{\tau - t_n}{t_{n-1} - t_n}f_{n-1} + \frac{\tau - t_{n-1}}{t_n - t_{n-1}}f_n\]
+\begin{equation}
+  x_{n+1} = x_n + \frac{h}{2}(3f_n - f_{n-1})
+  \label{eq:AM2}
+\end{equation}
+Аналогично по четырём точкам $(t_n, \dots, t_{n-3})$ строится полином третьей степени, и после интегрирования получаем:
+\begin{equation}
+  x_{n+1} = x_n + \frac{h}{24}(55f_n - 59f_{n-1} + 37f_{n-2} - 9f_{n-3})
+  \label{eq:AM4}
+\end{equation}
+\begin{importantblock}
+  \begin{center}
+    Достоинства и недостатки   
+  \end{center}
+  \begin{description}
+    \item [+] на каждом шаге функция $f$ вычисляется только один раз. Остальные значения берутся с предыдущих шагов.
+    \item [-] методы Адамса не самостартующие. Так, например, метод (\ref{eq:AM4}) - разностное уравнение четвертого порядка, а начальное условие только одно.
+              Для старта необходимо рассчитать три дополнительных начальных условия какими-то другими методами, а затем перейти к методу Адамса.
+  \end{description}
+\end{importantblock}
+
+\section{Локальная и глобальная погрешность}
+\textbf{Локальная погрешность} - погрешность, допущенная на одном шаге при условии, что все предыдущие точки были получены точно. \\
+\textbf{Глобальная погрешность} - разность между точным и приближенным решением. \\
+В качестве примера рассмотрим явный метод ломаных Эйлера.
+\begin{equation}
+  x_{n+1} = x_n + hf(t_n, x_n)
+  \label{eq:EMFwd}
+\end{equation}
+\textbf{I.}
+\[f(t, x) = f(t)\]
+Формула (\ref{eq:EMFwd}) превращается в квадратурную формулу левых прямоугольников.
+%PLOT? OR NOT?%
+\begin{gather*}
+  x_1 = x_0 + hf(t_0) \\
+  x_2 = x_1 + hf(t_1) \\
+  x_3 = x_2 + hf(t_2)
+\end{gather*}
+Общая (глобальная) погрешность равна сумме погрешностей (локальных), допущенных на предыдущих шагах. \\
+\textbf{II.} Общий случай
+\[f(t, x) = f(t, x)\]
+\begin{align*}
+  x_1 &= x_0 + hf(t_0, x_0) \\
+  \underbrace{x_2}_{\text{погр.}} &= \underbrace{x_1}_{\text{погр.}} + hf(t_1, \underbrace{x_1}_{\text{погр.}}) \\
+  x_3 &= x_2 + hf(t_2, x_2)
+\end{align*}
+В общем случае глобальная погрешность является очень сложной функцией, зависящей от всех погрешностей, допущенных на предыдущих шагах.
+
+  \subsection{Устойчивые и неустойчивые методы}
+  Методы делятся на устойчивые и неустойчивые. Если локальная погрешность, допущенная на одном шаге, резко возрастает на последующих шагах (чаще всего экспоненциально),
+    то говорят о неустойчивых методах. \\
+  То, как будет накапливаться погрешность, зависит от:
+  \begin{enumerate}
+    \item вида функции $f(t, x)$
+    \item величины $h$
+    \item выбранного метода
+  \end{enumerate}
+  Для обеспечивания малой глобальной погрешности необходимо выполнить два условия:
+  \begin{enumerate}
+    \item Обеспечить малую локальную погрешность на каждом шаге
+    \item Обеспечить устойчивость метода
+  \end{enumerate}
+
+\section{Степень/порядок точности метода\protect\footnotemark}
+\footnotetext{При переводе на русский данных терминов может произойти проблема с пониманием. Так, в английском языке методы по точности разделяют на first-order, second-order,
+              etc., а по степени разностного уравнения - one-step, two-step, etc. При переводе оба понятия можно назвать степенью метода, что может вызвать затруднение.}
+Все ранее рассмотренные методы могут быть записаны в следующем виде:
+\begin{equation}
+  x_{n+1} = x_n + hF(t_n, x_{n+1}, x_n, x_{n-1}, x_{n-S})
+  \label{eq:BasicMethod}
+\end{equation}
+Разложим правую часть формулы (\ref{eq:BasicMethod}) в ряд по степеням $h$ в точке....[addinfo]
+\begin{equation}
+  x_{n+1} = x_n + \sum_{k=1}^{\infty} \alpha_kh^k \times \frac{d^kx(t_n)}{dt^k}
+  \label{eq:TSBM}
+\end{equation}
+\begin{center}
+  \small{Разложение в ряд метода}
+\end{center}
+С другой стороны, $x_{n+1}$ можно разложить в ряд по степеням $h$ в точке $t_n$:
+\begin{equation}
+  x_{n+1} = x(t_n + h) = x_n + \sum_{k=1}^{\infty} \frac{h^k}{k!} \times \frac{d^kx(t_n)}{dt^k}
+  \label{eq:ATSBM}
+\end{equation}
+\begin{center}
+  \small{Точное разложение в ряд}
+\end{center}
+Локальная погрешность будет тем меньше, чем больше первых слагаемых в разложениях (\ref{eq:TSBM}) и (\ref{eq:ATSBM}) совпадают. \\
+Если коэффициенты разложений совпадают до $h^S$ включительно, то говорят, что метод имеет степень или порядок точности $S$.
+  Тогда главный член локальной погрешности $\sim h^{S+1}$. \\
+Установим степень точности для всех ранее полученных методов:
+\begin{importantblock}
+  \begin{center}
+    \textbf{Явный метод ломаных Эйлера}
+    \[x_{n+1} = x_n + hf(t_n, x_n) = x_n + \underline{hx^{'}(t_n)}\]
+    \small{метод первой степени}
+    \textbf{Неявный метод ломаных Эйлера}
+    \[x_{n+1} = x_n + hf(t_{n+1}, x_{n+1}) = x_n + hx^{'}(t_n + h) = x_n + h(\underline{x^{'}(t_n)} + \underbrace{\frac{h}{1!}x^{''}(t_n)}_{\text{не совпадают}} + \dots)\]
+    \small{метод первой степени}
+    \textbf{Неявный метод трапеций}
+    \begin{align*}
+      x_{n+1} &= x_n + \frac{h}{2}(f_{n+1} + f_n) = x_n + \frac{h}{2}(x^{'}(t_n+h)+x^{'}(t_n)) \\
+              &= x_n + \frac{h}{2}(\underline{x^{'}(t_n)} + \underline{\underline{\frac{h}{1!}x^{''}(t_n)}} + \underbrace{\frac{h^2}{2!}x^{'''}(t_n)}_{\text{не совпадают}} + \dots + \underline{x^{'}(t_n)})
+    \end{align*}
+    \small{метод второй степени}
+    \textbf{Метод Адамса, формула (\ref{eq:AM2})}
+    \begin{align*}
+      x_{n+1} &= x_n + \frac{h}{2}(3f_n - f_{n-1}) = x_n + \frac{h}{2}(3x^{'}(t_n)-x^{'}(t_n-h)) \\
+              &= x_n + \frac{h}{2}(\underline{3x^{'}(t_n)} + \underline{\underline{\frac{h}{1!}x^{''}(t_n)}} - \underbrace{\frac{h^2}{2!}x^{'''}(t_n)}_{\text{не совпадают}} + \dots - \underline{x^{'}(t_n)})
+    \end{align*}
+    \small{метод второй степени}
+  \end{center}
+  Можно показать, что метод Адамса, формула (\ref{eq:AM4}), имеет четвертую степень точности.
+\end{importantblock}
+
+\end{document}
