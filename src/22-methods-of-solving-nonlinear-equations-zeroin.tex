@@ -1,0 +1,129 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{enumerate}
+\usepackage{cancel}
+\usepackage[most]{tcolorbox} % для управления цветом
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+%Для выделения блока текста в рамку
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{22. Методы бисекции, секущих, обратной параболической интерполяции для решения
+       нелинейных уравнений. Подпрограмма ZEROIN}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Решение нелинейных уравнений}
+Остановимся на уравнении
+\begin{equation}
+  f(x) = 0.
+  \label{eq:NonlinearEq}
+\end{equation}
+Решению уравнения (\ref{eq:NonlinearEq}) предшествует подготовительный этап выявления промежутка $[a, b]$, на котором только один $0$
+и $f(a)f(b) < 0$. Так будет найден единственный вещественнй корень уравнения.
+
+\subsection{Метод бисекции (или метод \textit{дихотомии}, или метод \textit{половинного деления})}
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis} [
+      xlabel = {}, ylabel = {},
+      xmin = 0, xmax = 8, ymin = = -3, ymax = 5,
+      xtick = {}, ytick = {},
+      no markers,
+      extra x ticks={1, 3, 7},	% положение дополнительных тиков
+      extra x tick labels={	% их подписи
+ 		   {\large{$\textbf{a}$}}, {\large{$\textbf{c}$}}, {$\textbf{d}$}
+      },
+    ]
+      \addplot [
+        color = black,
+        thin,
+      ] coordinates{ (0,0)(8,0)};
+      \addplot [
+        color = blue,
+        thick,
+        smooth,
+        domain = 0:7,
+        samples = 300,
+      ] coordinates { (0,6)(1,3)(1.5,1.9)(2,1.1)(3,0)(4,-0.8)(5,-1.3)(6,-1.5)(7,-1.58)(8,-1.6)(10,-1.65)};
+
+      \addplot [
+        color = red,
+        only marks,
+      ] coordinates {(1,3.05)};
+      \addplot [
+        color = green,
+        only marks,
+      ] coordinates {(3,0)};
+      \addplot [
+        color = red,
+        only marks,
+      ] coordinates {(7,-1.58)};
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+Вычисляем значение функции в точке \[c = \frac{a+b}{2}\] и вычисляем $f(c)$. Если $sign(f(a)) = sign(f(c))$, то "отбрасываем" эту половину, иначе "отбрасываем" вторую половину. Далее рекурсия...\\
+
+\noindent За одно вычисление $f(x)$ на шаге промежуток гарантированно сокращается \textit{в два раза} независимо от вида функции.
+Если поведение функции хорошо прогнозируется и она имеет простой вид, то ответ можно получить и быстрее.
+
+\subsection{Метод секущих}
+По двум точкам строим интерполяционный полином Лагранжа первой степени и очередное - $0$ этого полинома
+\begin{gather*}
+  Q_1(x) = \frac{x-b}{a-b}f(a) + \frac{x-a}{b-a}f(b), \\
+  c = a - \frac{b-a}{f(b)-f(a)}f(a).
+\end{gather*}
+Метод секущих с разделенной разностью выглядит следующим образом:
+\begin{equation*}
+  x_{n+1} = x_n - \frac{x_n-x_{n-1}}{f(x_n)-f(x_{n-1})}f(x_n).
+\end{equation*}
+Новый промежуток будет $[c, b]$ или $[a, c]$ в зависимости от знака $f(x)$ в точке $c$. Замедление сходимости метода часто происходит,
+когда очередное приближение получается слишком близко к одному из концов промежутка.
+
+\subsection{Метод обратной параболической интерполяции}
+Если функция вычислена более, чем в двух точках, то эту информацию тоже можно использовать. \\
+
+\noindent По трем точкам $x_k,x_{k-1},x_{k-2}$ строится интерполяционнй полином второй степени для \textit{обратной} функции,
+при этом выполянются условия \\$x_i=g(f_i), \hspace{1mm} i =k, k-1, k-2$. В качестве следующего приближения берется $x_{k+1}=g(0)$.
+Одна из предыдущих точек удаляется. \\
+
+\noindent Важно, чтобы три значени $f_i$ были бы различными, чтобы избежать деления на $0$ (см. формулы "Метода секущих").
+
+\section{Подпрограмма ZEROIN}
+\begin{flushright}
+  \textit{Всегда работает хорошо.}
+\end{flushright}
+\begin{equation*}
+  \underbrace{ZEROIN}_{function}(A, B, \underbrace{F}_{f(x)}, EPS).
+\end{equation*}
+Внутри программы два алгритма:
+\begin{itemize}
+  \item метод обратной параболической интерполяции (основной),
+  \item метод бисекции (используется на несколько шагов, если основной метод замедляется).
+\end{itemize}
+
+\end{document}
