@@ -149,7 +149,10 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
     \[x_{n+1} = x_n + hf(t_n, x_n) = x_n + \underline{hx^{'}(t_n)}\]
     \small{метод первой степени}
     \textbf{Неявный метод ломаных Эйлера}
-    \[x_{n+1} = x_n + hf(t_{n+1}, x_{n+1}) = x_n + hx^{'}(t_n + h) = x_n + h(\underline{x^{'}(t_n)} + \underbrace{\frac{h}{1!}x^{''}(t_n)}_{\text{не совпадают}} + \dots)\]
+    \begin{align*}
+      x_{n+1} &= x_n + hf(t_{n+1}, x_{n+1}) = x_n + hx^{'}(t_n + h) \\
+              &= x_n + h(\underline{x^{'}(t_n)} + \underbrace{\frac{h}{1!}x^{''}(t_n)}_{\text{не совпадают}} + \dots)
+    \end{align*}
     \small{метод первой степени}
     \textbf{Неявный метод трапеций}
     \begin{align*}
