@@ -1,0 +1,218 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{backgrounds}
+\tikzset{
+    reverseclip/.style={insert path={(current page.north east) --
+        (current page.south east) --
+        (current page.south west) --
+        (current page.north west) --
+        (current page.north east)}
+    }
+}
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{27. Глобальная погрешность. Устойчивость метода. Ограничение на шаг. Явление жёсткости и методы решения жёстких систем}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+Для обеспечения малой величины глобальной погрешности необходимо обеспечить не только малую локальную погрешность, но и устойчивость метода. \\
+
+Устойчивость методов будем анализировать на примере тестовой системы - линейной системы дифференциальных уравнений с постоянной матрицей. Нелинейная система
+  в малой окрестности какой-то точки может быть хорошо аппроксимирована линейной системой, и если метод плохой для линейной системы, то и в общем случае он плохой. \\
+\marginpar {
+  \footnotesize \[x^{'} = Ax\] \[\Re(\lambda_k) < 0\] \[x_{n+1} = Bx_n\] \[|\lambda_k(B)| < 1\]
+}
+\begin{gather}
+  \frac{dx}{dt} = f(t, x) \\
+  \frac{dx}{dt} = Ax
+  \label{eq:DESys}
+\end{gather}
+Пусть $\lambda_k$ матрицы $A$ лежат в левой полуплоскости, тогда решение системы (\ref{eq:DESys}) будет асимптотически устойчивым. \\
+Для качественного соответствия точного и приближённого решения необходимо, чтобы решение разностного уравнения численного метода также было асимптотически устойчиво. \\
+Обратимся к явному методу ломаных Эйлера:
+\begin{equation}
+  x_{n+1} = x_n + hf(t_n, x_n) = x_n + hAx_n = (E + hA)x_n
+  \label{eq:FEM}
+\end{equation}
+Чтобы $x_n$ было асимптотически устойчивым, необходимо, чтобы $|\lambda_k(E + hA)| < 1$. \\
+Если у матрицы $A$ - собственные значения $\lambda_k$, то у матрицы $E + hA$ собственные значения $1 + h\lambda_k$. \\
+Условие принимает вид $|1 + h\lambda_k| < 1$. \\
+\textbf{\textit{a).}} $\lambda_k \in \mathbb{R},\, \lambda_k < 0$.
+\[-1 < 1 + h\lambda_k < 1\]
+Правое неравенство соблюдается всегда, левое:
+\begin{equation}
+  -h\lambda_k < 2 \Leftrightarrow h < \frac{2}{|\lambda_k|_{max}}
+  \label{eq:SSR}
+\end{equation}
+Т.к. $|\lambda_k| \le \|A\|$, то на практике часто используют достаточное условие устойчивости \[h \le \frac{2}{\|a\|} \settag{4*}\]
+\textbf{\textit{б).}} $\lambda_k = \alpha + i\omega,\, \alpha < 0$.
+\begin{align}
+    |1 + h\lambda_k|              &< 1 \notag \\
+    |1 + h\alpha + ih\omega|      &< 1 \notag \\
+    (1 + h\alpha)^2 + h^2\omega^2 &< 1
+\end{align}
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis} [
+      xlabel = {$h\alpha$}, ylabel = {$h\omega$},
+      xmin = -3, ymin = -2, xmax = 2, ymax = 2,
+      xtick = {}, ytick = {},
+      axis equal,
+      axis x line = middle, axis y line = middle,
+      no markers
+    ]
+      \addplot+[fill=orange, fill opacity=0.2] [
+        domain = -180:180,
+        samples = 100,
+        color = orange,
+        style = dashed
+      ] ({cos(x)-1},{sin(x)}); 
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+Множество значений $h\lambda$, удовлетворяющее условию устойчивости, называется областью устойчивости данного метода. \\
+Является ли ограничение на шаг (\ref{eq:SSR}) обременительным на практике? \\
+\marginpar {
+  \footnotesize \[e^{-3} < 0.05\] \[e^{-5} < 0.01\]
+}
+\textbf{\underline{Пример 1.}} $\lambda_1 = -1, \lambda_2 = -2$
+\[x(t) = C_1e^{-t} + C_2e^{-2t}\]
+Будем строить график на промежутке $t \in [0; T],\, T = 3$. Формула (\ref{eq:SSR}) даёт $h < 1$.
+\marginpar{\footnotesize $h = 0.1 - 0.5$ \\ П. $h = 0.1$} \\
+\textit{Вывод:} условие (\ref{eq:SSR}) проблем не создаёт. \\
+\textbf{\underline{Пример 2.}} $\lambda_1 = -1, \lambda_2 = -20000$
+\[x(t) = C_1e^{-t} + C_2e^{-2\cdot 10^4t}\]
+$t$ определяется самой "медленной" экспонентой. \\
+Будем строить график на промежутке $t \in [0; T],\, T = 3$. Формула (\ref{eq:SSR}) даёт $h < 10^{-4}$. \\
+
+Описанная ситуация будет проявляться тем острее, чем больше разброс между собственными значениями матрицы. \\
+На практике $T \sim \frac{1}{|\lambda_k|_{min}},\, h < \frac{1}{|\lambda_k|_{max}}$. \\
+Тогда число шагов $= \frac{T}{h} \sim \frac{|\lambda_k|_{max}}{|\lambda_k|_{min}} \gg 1$ пропорционально числу обусловленности матрицы. Чем хуже матрица
+  обусловлена, тем больше шагов. \\
+Такие системы дифференциальных уравнений с плохо обусловленной матрицей получили название \textbf{жёсткие системы дифференциальных уравнений}. \\
+Для их решений характерны два участка:
+\begin{enumerate}
+  \item Участок малой продолжительности ($\tau_{\text{пс}}$) называется пограничным слоем. На нём решение меняется очень быстро и обладает большими производными.
+  \item На остальной части промежутка ($T$) решение меняется относительно медленно: $\tau_{\text{пс}} \ll T$
+\end{enumerate}
+Рассмотрим метод Эйлера-Коши:
+\[x_{n+1}^* = x_n + hf(t_n, x_n)\]
+\begin{align*}
+  x_{n+1} &= x_n + \frac{h}{2}(f(t_n, x_n) + f(t_{n+1}, x_{n+1}^*)) \\
+          &= x_n + \frac{h}{2}(Ax_n + A(x_n + hAx_n)) \\
+          &= x_n(E + hA + \frac{h^2A^2}{2})
+\end{align*}
+\begin{align*}
+  \Big|\lambda_k(E + hA + \frac{h^2A^2}{2})\Big| &< 1 \\
+  \Big|1 + h\lambda_k + \frac{h^2\lambda_k^2}{2}\Big| &< 1
+\end{align*}
+Ограничимся случаем, когда $\lambda_k$ вещественны.
+\[-1 < 1 + h\lambda_k + \frac{h^2\lambda_k^2}{2} < 1\]
+Левое неравенство выполняется всегда,\footnote{$h\lambda_k$ всегда отрицательно, после преобразований можно получить выражение $-4-2h\lambda_k < (h\lambda_k)^2$, 
+                                              что при любых значениях $h$ верно.} правое:
+\begin{gather*}
+  h\lambda_k + \frac{h^2\lambda_k^2}{2} < 0 \\
+  1 + \frac{h\lambda_k}{2} > 0 \Leftrightarrow 2 > -h\lambda_k
+\end{gather*}
+Выходит то же самое, что и в (\ref{eq:SSR}), хоть и будут различия, при переходе в $\mathbb{C}$. \\
+Аналогичные ограничения имеют все явные методы Рунге-Кутты и Адамса:
+\begin{align*}
+  RK2    &\rightarrow h|\lambda_k| < 2 \\
+  RK4    &\rightarrow h|\lambda_k| < 2.785\dots \\
+  Adams2 &\rightarrow h|\lambda_k| < 1 \\
+  Adams4 &\rightarrow h|\lambda_k| < 0.3
+\end{align*}
+Для решения жёстких систем хотелось бы применять методы, область устойчивости которых включала бы в себя всю или почти всю левую полуплоскость. \\
+Рассмотрим неявный метод ломаных Эйлера:
+\[x_{n+1} = x_n + hf(t_{n+1}, x_{n+1}) = x_n + hAx_{n+1}\]
+\begin{gather*}
+  (E - hA)x_{n+1} = x_n \\
+  x_{n+1} = (E - hA)^{-1}x_n
+\end{gather*}
+Пусть $\lambda_k = \alpha + i\omega$.
+\begin{align*}
+  |\lambda_k(E - hA)^{-1}| &< 1 \\
+  \frac{1}{|1 - h\lambda_k|} &< 1 \\
+  |1 - h\lambda_k| &> 1 \\
+  |1 - h\alpha - ih\omega| &> 1 \\
+  (1 - h\alpha)^2 + h^2\omega^2 &> 1
+\end{align*}
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis} [
+      xlabel = {$h\alpha$}, ylabel = {$h\omega$},
+      xmin = -2, ymin = -2, xmax = 3, ymax = 2,
+      xtick = {}, ytick = {},
+      axis equal, axis on top = true,
+      axis x line = middle, axis y line = middle,
+      no markers
+    ]
+      \fill[orange, opacity=0.2] (axis cs: -2, -2) rectangle (axis cs: 3, 2);
+      \addplot [
+        domain = -180:180,
+        samples = 100,
+        color = orange,
+        style = dashed
+      ] ({cos(x)+1},{sin(x)});
+      \addplot+[fill=white] [
+        domain = -180:180,
+        samples = 100,
+        color = white,
+        style = dashed, draw = none
+      ] ({cos(x)+1},{sin(x)});
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+Для $\lambda_k < 0$ ограничение по устойчивости отсутствует, и он может выбираться только из соображений точности. Больший объём вычислений на шаге по сравнению
+  с явным методом для жёстких систем с лихвой окупается выигрышем в величине шага. \\
+Рассмотрим неявный метод трапеций:
+\[x_{n+1} = x_n + \frac{h}{2}(f(t_n, x_n) + f(t_{n+1}, x_{n+1})) = x_n + \frac{h}{2}(Ax_n + Ax_{n+1})\]
+\begin{gather*}
+  \Big(E - \frac{hA}{2}\Big)x_{n+1} = \Big(E + \frac{hA}{2}\Big)x_n \\
+  x_{n+1} = \Big(E - \frac{hA}{2}\Big)^{-1}\Big(E + \frac{hA}{2}\Big)x_n
+\end{gather*}
+Пусть $\lambda_k = \alpha + i\omega$.
+\begin{align*}
+  \bigg|\lambda_k\bigg(\Big(E - \frac{hA}{2}\Big)^{-1}\Big(E + \frac{hA}{2}\Big)\bigg)\bigg| &< 1 \\
+  \frac{\Big|1 + \frac{h\lambda_k}{2}\Big|}{\Big|1 - \frac{h\lambda_k}{2}\Big|} &< 1 \\
+  \Big|1 + \frac{h\lambda_k}{2}\Big| &< \Big|1 - \frac{h\lambda_k}{2}\Big| \\
+  \Big|1 + \frac{h\alpha}{2} + \frac{ih\omega}{2}\Big| &< \Big|1 - \frac{h\alpha}{2} - \frac{ih\omega}{2}\Big| \\
+  (1 + \frac{h\alpha}{2})^2 + \underline{\frac{h^2\omega^2}{4}} &< (1 - \frac{h\alpha}{2})^2 + \underline{\frac{h^2\omega^2}{4}} \\
+  \underline{1} + h\alpha + \underline{\frac{h^2\alpha^2}{4}} &< \underline{1} - h\alpha + \underline{\frac{h^2\alpha^2}{4}} \\
+  2h\alpha &< 0 \\
+  h\alpha &< 0
+\end{align*}
+Область устойчивости метода трапеций в точности равна левой полуплоскости. \\
+Методы, пригодные для решения жёстких систем, как правило, являются неявными.
+
+\end{document}
