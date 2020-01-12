@@ -1,0 +1,62 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{28. Метод Ньютона в неявных алгоритмах решения дифференциальных уравнений}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+Методы, пригодные для решения жёстких систем, как правило, являются неявными. Для нахождения $x_{n+1}$ на каждом шаге решаются нелинейные уравнения методом Ньютона.
+  В качестве примера рассмотрим неявный метод ломаных Эйлера:
+\begin{equation}
+  \frac{dx}{dt} = f(t, x)  
+\end{equation}
+\[x_{n+1} = x_n + hf(t_{n+1}, x_{n+1})\]
+\[F(z) = z - x_n - hf(t_{n+1}, z) = 0\]
+\begin{equation}
+  \begin{cases}
+    \frac{\partial F}{\partial z}z_k \varepsilon_k = -F(z_k) \\
+    z_{k+1} = z_k + \varepsilon_k
+  \end{cases}
+  \label{eq:NM}
+\end{equation}
+Решение системы (\ref{eq:NM}) это $x_{n+1}$. Применяем к уравнению (\ref{eq:NM}) метод Ньютона:
+\[\frac{\partial F}{\partial z} = E - h\frac{\partial f(t_{n+1}, z)}{\partial z}\]
+$z_k$ - это $k$-тое приближение к $x_{n+1}$. \\
+В качестве начального приближения $z_0$ можно выбрать решение на предыдущем шаге $x_n$. \\
+Второй способ - сделать один шаг явного метода ломаных Эйлера: $z_0 = x_n + hf(t_n, x_n)$. \\
+\begin{importantblock}
+  Большую популярность получил модифицированный метод Ньютона. $\frac{dF}{dz}(x_0)$ вычисляется \underline{однократно} в начальной точке. Однократно
+    выполняется её $LU$-разложение программой $DECOMP$, и на последующих шагах в методе Ньютона используется только $SOLVE$. Матрица вычисляется заново
+    только когда метод Ньютона перестаёт сходиться за три итерации.
+\end{importantblock}
+Увеличение объёма работы на одном шаге в неявных методах по сравнению с явными полностью окупается выигрышем в величине шага для жёстких систем.
+
+\end{document}
