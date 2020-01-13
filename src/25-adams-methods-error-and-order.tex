@@ -147,25 +147,25 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
   \begin{center}
     \textbf{Явный метод ломаных Эйлера}
     \[x_{n+1} = x_n + hf(t_n, x_n) = x_n + \underline{hx^{'}(t_n)}\]
-    \small{метод первой степени}
-    \textbf{Неявный метод ломаных Эйлера}
+    \footnotesize метод первой степени \\
+    \normalsize \textbf{Неявный метод ломаных Эйлера}
     \begin{align*}
       x_{n+1} &= x_n + hf(t_{n+1}, x_{n+1}) = x_n + hx^{'}(t_n + h) \\
               &= x_n + h(\underline{x^{'}(t_n)} + \underbrace{\frac{h}{1!}x^{''}(t_n)}_{\text{не совпадают}} + \dots)
     \end{align*}
-    \small{метод первой степени}
-    \textbf{Неявный метод трапеций}
+    \footnotesize метод первой степени \\
+    \normalsize \textbf{Неявный метод трапеций}
     \begin{align*}
       x_{n+1} &= x_n + \frac{h}{2}(f_{n+1} + f_n) = x_n + \frac{h}{2}(x^{'}(t_n+h)+x^{'}(t_n)) \\
               &= x_n + \frac{h}{2}(\underline{x^{'}(t_n)} + \underline{\underline{\frac{h}{1!}x^{''}(t_n)}} + \underbrace{\frac{h^2}{2!}x^{'''}(t_n)}_{\text{не совпадают}} + \dots + \underline{x^{'}(t_n)})
     \end{align*}
-    \small{метод второй степени}
-    \textbf{Метод Адамса, формула (\ref{eq:AM2})}
+    \footnotesize метод второй степени \\
+    \normalsize \textbf{Метод Адамса, формула (\ref{eq:AM2})}
     \begin{align*}
       x_{n+1} &= x_n + \frac{h}{2}(3f_n - f_{n-1}) = x_n + \frac{h}{2}(3x^{'}(t_n)-x^{'}(t_n-h)) \\
               &= x_n + \frac{h}{2}(\underline{3x^{'}(t_n)} + \underline{\underline{\frac{h}{1!}x^{''}(t_n)}} - \underbrace{\frac{h^2}{2!}x^{'''}(t_n)}_{\text{не совпадают}} + \dots - \underline{x^{'}(t_n)})
     \end{align*}
-    \small{метод второй степени}
+    \footnotesize метод второй степени
   \end{center}
   Можно показать, что метод Адамса, формула (\ref{eq:AM4}), имеет четвертую степень точности.
 \end{importantblock}
