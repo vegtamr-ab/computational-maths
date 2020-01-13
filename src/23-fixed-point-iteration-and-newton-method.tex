@@ -81,8 +81,15 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 \end{equation}
 Подставим в уравнение (\ref{eq:NonLinearEq}) его корень $x^*=x_n+\varepsilon_n$ и разложим \\ в ряд по степени $\varepsilon_n$:
 \begin{equation}
-  0 = f(x^*) = f(x_n+\varepsilon_n) = f(x_n)+\varepsilon_nf^{'}(x_n)+\frac{\varepsilon_n^2}{2!}f^{''}(\eta),
+  0 = f(x^*) = f(x_n+\varepsilon_n) = f(x_n)+\varepsilon_nf^{'}(x_n)+\frac{\varepsilon_n^2}{2!}f^{''}(\eta).
 \end{equation}
+\begin{flushright}
+  \small
+  Как разложили в ряд - многочлен Тейлора: \\
+  $f(x_n+\varepsilon_n) = [\text{раскладываем в точке $x_n$}] =$ \\
+  $= f(x_n) + f(x_n)^{'}(x_n+\varepsilon_n-x_n) + f^{''}(\eta)(x_n+\varepsilon_n-x_n)^2/(2!)$, \\
+  последнее слогаемое - это погрешность.
+\end{flushright}
 пренебрежем последним слагаемым и для $\varepsilon_n$ получим
 \begin{equation*}
   \varepsilon_n = - \frac{f(x_n)}{f^{'}(x_n)}.
