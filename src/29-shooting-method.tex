@@ -1,0 +1,62 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{29. Метод стрельбы для решения краевых задач. Сведение дифференциального уравнения выского порядка
+      к системе уравенний первого порядка}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Методы решения краевых задач для дифференциальных уравений}
+\begin{equation*}
+  \frac{dx}{dt} = f(t, x), \hspace{5mm} t \in [a, b].
+\end{equation*}
+В \textit{задаче Коши} все начальные условия задаются в точке $a$. В общем случае они могут задаваться в любой точке
+на промежутке $[a, b]$, чаще всего их задают на концах (краях) промежутка - такие задачи называются \textit{краевые}. \\
+
+\noindent Методы решения краевых задач делится на две группы, когда исходная задача сводится к
+\begin{itemize}
+  \item многократному решению зачачи Коши;
+  \item решению систем линейных и нелинейных алгебраических уравнений.
+\end{itemize}
+
+\noindent Типичным представителем первой группы является \textit{метод стрельбы}.
+
+\subsection{Метод стрельбы (пристрелки)}
+Проиллюстрируем на примере уравнения 2-го порядка:
+\begin{align*}
+  x = \begin{pmatrix} U \\ V \end{pmatrix}, && \frac{dU}{dt} = f_1(t, U, V), && \frac{dV}{dt} = f_2(t, U, V), && t \in [a, b],
+\end{align*}
+\begin{equation*}
+  U(a)=U_a, V(b)=V_b.
+\end{equation*}
+
+
+\end{document}
