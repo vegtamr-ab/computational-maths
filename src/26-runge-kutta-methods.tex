@@ -103,8 +103,8 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 \end{equation}
 Раскладываем в ряд формулу (\ref{eq:RKM}) и сравниваем коэффициенты с формулой (\ref{eq:KAWO}):
 \begin{align*}
-  x_{n+1} &= x_n + p_1hf(t_n, x_n) + p_2hf(t_n + \alpha h, x_n + \beta hf_n) \\
-          &= x_n + p_1hf(t_n, x_n) + p_2h\Big(f(t_n, x_n) + \frac{h}{1!}\frac{df}{dh}(t_n) + \dots\Big) \\
+  x_{n+1} &= x_n + p_1hf(t_n, x_n) + p_2hf(t_n + \alpha h, x_n + \beta hf_n) = \\
+          &= x_n + p_1hf(t_n, x_n) + p_2h\Big(f(t_n, x_n) + \frac{h}{1!}\frac{df}{dh}(t_n) + \dots\Big) = \\
           &= x_n + p_1hf_n + p_2h\Big(f_n + h\Big(\frac{\partial f}{\partial t}\alpha + \frac{\partial f}{\partial x}\beta f \Big)\Big |_{t=t_n} + \dots\Big)
 \end{align*}
 \begin{importantblock}
