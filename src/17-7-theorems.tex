@@ -66,7 +66,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
   \begin{gather*}
     f(B) = \sum_{k=0}^{\infty}\alpha_kB^k \boxed{=} \\
     B^k = SA\underbrace{S^{-1}S}_{E}AS^{-1} \dots SAS^{-1} = SA^kS^{-1} \\
-    \boxed{=} \sum_{k=0}^{\infty}\alpha_kSA^kS^{-1} = S\bigg(\sum_{k=0}^{\infty}\alpha_kA^k\bigg)S^{-1} = \sum_{k=0}^{\infty}\alpha_kA^k.     \qed %символ Халмоша
+    \boxed{=} \sum_{k=0}^{\infty}\alpha_kSA^kS^{-1} = S\underbrace{\bigg(\sum_{k=0}^{\infty}\alpha_kA^k\bigg)}_{\text{степ. матр. ряд}} S^{-1} = f(B)=Sf(A)S^{-1}.     \qed %символ Халмоша
   \end{gather*}
 \end{evidence}
 \begin{theorem}
