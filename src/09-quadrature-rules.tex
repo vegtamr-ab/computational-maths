@@ -253,7 +253,7 @@ boxrule=0pt,boxsep=0pt,breakable} % настройки области с изм�
 \begin{importantblock}
   \begin{align*}
     \stepcounter{equation}
-    I & \approx \frac{b-a}{2N} \bigg( f(a) + \sum_{k=1}^{N-1} f(x_k) + f(b) \bigg) \settag{4*}
+    I & \approx \frac{b-a}{2N} \bigg( f(a) + 2\sum_{k=1}^{N-1} f(x_k) + f(b) \bigg) \settag{4*}
   \end{align*}
 \end{importantblock}
 В формуле Симпсона выберем $N$ чётным, количество промежутков будет $N^*=N/2$, каждый промежуток будет вдвое большей длины, чем в предыдущих формулах.
