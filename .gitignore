@@ -5,4 +5,4 @@
 *.log
 *.fdb_latexmk
 *.aux
-src/*.pdf
+*/src/*.pdf
