@@ -1,0 +1,197 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+%--------------------------------------
+
+\definecolor{lemonchiffon}{rgb}{1.0, 0.98, 0.8}
+\newtcolorbox{mainblock}{colback=lemonchiffon,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+\definecolor{block-gray}{gray}{0.95} % уровень прозрачности (1 - максимум)
+\newtcolorbox{importantblock}{colback=block-gray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable} % настройки области с изменённым фоном
+
+\makeatletter
+\newcommand{\settag}[1]{
+  \tag*{(#1)\qquad}
+  \edef\@currentlabel{\theequation#1}}
+\makeatother
+
+\title{4. Получение решения линейной модели (построение матричной экспоненты и интеграла от неё)}
+\author{Андрей Бареков \and Ярослав Пылаев \and По лекциям Устинова С.М.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\section{Получение решения линейной модели}
+Рассмотрим линейную динамическую модель
+\begin{equation}
+  \frac{dx}{dt} = Ax + b
+  \label{eq:DEM}
+\end{equation}
+Для решения системы (\ref{eq:DEM}) можно было использовать стандартные программы решения дифференциальных уравнений (например, \verb|RKF45|), однако для линейных систем можно предложить специальный алгоритм, который эффективно работает в т.ч. для жёстких систем. \\
+Точное решение системы (\ref{eq:DEM}) имеет вид\footnote{Из курса вычислительной математики, №18}:
+\begin{equation}
+  x(t) = e^{At}x_0 + \int_0^t e^{A\tau}\,d\tau \times b
+  \label{eq:DES}
+\end{equation}
+Воспользоваться разложением в ряд для построения $e^{At}$ затруднительно, т.к. нужно изменять $t$. Использование формулы Лагранжа-Сильвестра даже для матрицы
+  средней размерности требует расчёта собственных значений и векторов и использования громоздких формул. \\
+  Поэтому на практике используют следующий подход: \\
+Пусть $H$ - желаемый шаг визуализации решения (шаг печати)\footnote{В.м., $h_{print}$ из RKF45, №26}. Запишем решение (\ref{eq:DES}) в точке $t+H$:
+\begin{equation}
+  x(t + H) = e^{A(t+H)}x_0 + \int_0^{t+H}a^{A\tau}\,d\tau \times b
+  \label{eq:DESH} 
+\end{equation}
+Умножим \ref{eq:DES} на $e^{AH}$ и вычтем из уравнения \ref{eq:DESH}:
+\marginpar
+{
+  $\tau + H = \tau^*$
+}
+\begin{align*}
+  x(t + H) - e^{AH} x(t) &= \int_0^{t+H} e^{A\tau}\,d\tau \times b - \int_0^t e^{A(\tau + H)}\,d\tau \times b \\
+                         &= \int_0^{t+H} e^{A\tau}\,d\tau \times b - \int_H^{t+H} e^{A\tau^*}\,d\tau^* \times b \\
+                         &= \int_0^H e^{A\tau}\,d\tau \times b
+\end{align*}
+\begin{equation}
+  x(t + H) = e^{AH}x(t) + \int_0^H e^{A\tau}\,d\tau \times b
+  \label{eq:DESHF}
+\end{equation}
+Теперь необходимо \textbf{однократно} построить матричную экспоненту $e^{AH}$ и её интеграл, а затем решить уравнение (\ref{eq:DESHF}) пошаговым методом. \\
+Матрицу $e^{AH}$ можно было бы построить разложением в ряд, однако, по второй теореме о матричных функциях\footnote{В.м., №17}:
+\begin{gather*}
+  A = U\Lambda U^{-1} \\
+  f(A) = Uf(\Lambda)U^{-1} \\
+  e^{AH} = U
+  \begin{pmatrix}
+    f(\lambda_1) & 0 & \cdots & 0 \\
+    0 & f(\lambda_2) & \cdots & 0 \\
+    \cdots & \cdots & \cdots & \cdots \\
+    0 & 0 & \cdots & f(\lambda_n) \\
+  \end{pmatrix} U^{-1} = U
+  \begin{pmatrix}
+    e^{\lambda_1H} & 0 & \cdots & 0 \\
+    0 & e^{\lambda_2H} & \cdots & 0 \\
+    \cdots & \cdots & \cdots & \cdots \\
+    0 & 0 & \cdots & e^{\lambda_nH} \\
+  \end{pmatrix} U^{-1}
+\end{gather*}
+Использование разложения в ряд $e^{AH}$ сводится к разложению в ряд скалярных функций $f(\lambda_k) = e^{\lambda_kH}$
+\begin{importantblock}
+  \textbf{Пример:} \\
+  \[e^{-0.1} = 1 - 0.1 + \frac{0.01}{2} - \frac{0.001}{6} + \frac{0.0001}{24} + \dots\]
+  \[e^{-10}  = 1 - 10 + \frac{100}{2} - \frac{1000}{6} + \frac{10^4}{24} + \dots\]
+  При разложении в ряд малое число слагаемых будет только при $|\lambda_kH \approx 1|$, а если система жёсткая, то это требует очень маленького шага \\
+\end{importantblock}
+\textbf{Проблема:} \\
+Умею строить разложение в ряд $e^{Ah}$ при малых $h$ с небольшим кол-вом слагаемых. Как построить $e^{AH}$ при большом $H$? \\
+Получить $e^{AH}$ можно, используя процедуру удвоения шага.
+\begin{equation*}
+  x(t + H) = \varphi(AH)x(t) + g(H),\quad g(H) = \int_0^H e^{A\tau}\,d\tau \times b \tag{4*}
+  \label{eq:DESHD}
+\end{equation*}
+\begin{equation}
+  \varphi(2h) = \varphi(h) \times \varphi(h)
+  \label{eq:PhiD}
+\end{equation}
+Используя формулу (\ref{eq:PhiD}) $S$ раз, получаем $\varphi(AH),\,H = 2^S\times h$ \\
+Для вектора $g(H)$ также существует процедура удвоения шага:
+\marginpar{$\tau = \tau^* + h$}
+\begin{align*}
+  g(2h) &= \int_0^{2h} e^{A\tau}\,d\tau \times b = \int_0^h e^{A\tau}\,d\tau \times b + \int_h^{2h} e^{A\tau}\,d\tau \times b \\
+        &= g(h) + e^{Ah} \int_0^h e^{A\tau^*}\,d\tau^* \times b = (E + \varphi(Ah))g(h)
+\end{align*}
+\begin{equation}
+  g(2h) = (E + \varphi(Ah))g(h)
+  \label{eq:gHD}
+\end{equation}
+$\varphi(Ah)$ и $g(h)$ находим разложением в ряд с небольшим количеством слагаемых:
+\begin{equation}
+  \varphi(Ah) = E + Ah + \frac{A^2h^2}{2!} + \frac{A^3h^3}{3!} + \cdots^[ \footnote{ряд для экспоненты} ^]
+  \label{eq:ExpSeries}
+\end{equation}
+\begin{equation}
+  \varphi(Ah) = hE + \frac{Ah^2}{2!} + \frac{A^2h^3}{3!} + \cdots^[ \footnote{получается интегрированием ряда для экспоненты} ^]
+  \label{eq:gHSeries}
+\end{equation}
+
+Вместо $\lambda_k$ можно использовать норму - $h \| A \| \approx 1$
+
+\begin{importantblock}
+  \textbf{Детализируем алгоритм по шагам:}
+  \begin{enumerate}
+    \item Задаёмся желаемым значением $H$, выбираем минимальное целое значение $S$, такое, что $h = \frac{H}{2^S} < \frac{1}{\|A\|}$
+    \item Для $h$ строим $\varphi(Ah)$ и $g(h)$ по формулам (\ref{eq:ExpSeries}) и (\ref{eq:gHSeries}) с небольшим количеством слагаемых
+    \item $S$ раз используем формулы (\ref{eq:PhiD}) и (\ref{eq:gHD}) удвоения шага и получаем матрицу $\varphi(AH)$ и $g(H)$
+    \item Решаем уравнение (\ref{eq:DESHD}) пошаговым методом.
+  \end{enumerate}
+  Входные параметры программы следующие:
+  \begin{itemize}
+    \item \verb|N| - размер матрицы
+    \item \verb|A| - сама матрица
+    \item \verb|B| - вектор $b$
+    \item \verb|X| - начальное приближение $x$
+    \item \verb|H| - желаемый шаг визуализации решения
+  \end{itemize}
+  В списке параметров отсутствуют $\varepsilon_A$ и $\varepsilon_R$. В отсутствие ошибок округления погрешность возникает только в
+    формулах (\ref{eq:ExpSeries}) и (\ref{eq:gHSeries}), которые могут быть реализованы с любой степенью точности. Степень жёсткости системы проявляется
+    только в величине $S$.
+\end{importantblock}
+
+\section{Некоторые свойства собственных векторов матриц $A$ и $A^T$}
+\setcounter{equation}{0}
+\begin{gather*}
+  A \rightarrow \lambda_k, U_k \\
+  A^T \rightarrow \lambda_k, V_k
+\end{gather*}
+\begin{equation}
+  AU_k = \lambda_kU_k
+  \label{eq:AEigenvector}
+\end{equation}
+\[A^TV_i = \lambda_iV_i\]
+\begin{equation}
+  V_i^TA = \lambda_iV_i^T
+  \label{eq:ATEigenvector}
+\end{equation}
+Умножим уравнение (\ref{eq:AEigenvector}) слева на $V_i^T$, а уравнение (\ref{eq:ATEigenvector}) справа на $U_k$. Вычитаем результаты:
+\[0 = (\lambda_k - \lambda_i)V_i^TU_k\]
+\begin{importantblock}
+  Если $i \ne k$, то:
+  \begin{equation*}
+    V_i^T \times U_k = 0 \tag{*!}
+    \label{eq:AATRule}
+  \end{equation*}
+  Если $V_i$ и $U_k$ вещественные, то собственные векторы для $A^T$ и $A$, относящиеся к различным $\lambda_k$, ортогональные.
+\end{importantblock}
+
+  \subsection{Формула Лагранжа-Сильвестра}
+  Формула (\ref{eq:AATRule}) позволяет записать формулу Лагранжа-Сильвестра в более компактном виде.
+  \begin{equation*}
+    f(A) = \sum_{k=1}^N T_kf(\lambda_k), T_k = \frac{(A-\lambda_1E)\dots(A-\lambda_{k-1}E)(A-\lambda_{k+1}E)\dots(A-\lambda_nE)}
+                                               {(\lambda_k-\lambda_1)\dots(\lambda_k-\lambda_{k-1})(\lambda_k-\lambda_{k+1})\dots(\lambda_k-\lambda_n)}.
+  \end{equation*}
+  Умножим $T_k \times U_i \, (k \ne i)$. Скобку $(A - \lambda_iE)$ в числителе поставим последней.
+  \[(A - \lambda_iE)U_i = 0 \Rightarrow T_kU_i = 0,\, k \ne i\]
+  Умножим $T_k \times U_k$. Последовательным умножением скобок на $U_k$ убеждаемся в том, что $T_kU_k = U_k$. \\
+  Пусть $z$ - первая строчка матрицы $T_k$. Разложим этот вектор по векторам $V_i^T$:
+  \[z = \alpha_1V_1^T + \alpha_2V_2^T + \dots + \alpha_NV_N^T\]
+  Умножаем $z \times U_i \, (k \ne i)$. $\alpha_iV_i^TU_i = 0,\, i \ne k$
+  Таким образом, первая строчка $T_k$ содержит только одно слагаемое - $\alpha_kV_k^T$. Аналогичный вид будут иметь все остальные строки матрицы $T_k$.
+    Матрица $T_k$ имеет ранг $1$, и её можно записать в виде:
+  \[T_k = C_k \times V_k^T\]
+  , где вектор $C_k$ содержит множители каждой строки. Нормируем векторы $V_k$ и $U_k$ так, чтобы $V_k^TU_k = 1$. \\
+  Тогда $T_kU_k = C_k\underbrace{V_k^TU_k}_1 = C_k = U_k$. \\
+  Таким образом матрица $T_k$ имеет вид $T_k = U_kV_k^T$, и формула Лагранжа-Сильвестра приобретает следующий вид:
+  \[f(A) = \sum_{k=1}^N U_kV_k^T f(\lambda_k)\]
+
+\end{document}
